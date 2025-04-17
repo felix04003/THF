@@ -1,0 +1,1064 @@
+2025-04-14 20:14:48,027 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:14:48,027 - ERROR - Erreur critique : name 'verify_packages' is not defined
+2025-04-14 20:14:48,027 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 20:14:52,427 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:14:52,427 - ERROR - Erreur critique : name 'verify_packages' is not defined
+2025-04-14 20:14:52,427 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 20:15:11,530 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:15:13,443 - INFO - Vérification de la configuration TWS...
+2025-04-14 20:15:13,443 - WARNING - TWS n'est pas installé sur votre système
+2025-04-14 20:15:13,443 - ERROR - TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.
+2025-04-14 20:15:13,443 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 20:19:11,785 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:19:13,877 - INFO - Vérification de la configuration TWS...
+2025-04-14 20:19:13,878 - WARNING - TWS n'est pas installé sur votre système
+2025-04-14 20:19:13,878 - ERROR - TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.
+2025-04-14 20:19:13,879 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 20:25:47,540 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:25:49,657 - INFO - Vérification de la configuration TWS...
+2025-04-14 20:25:49,658 - WARNING - TWS n'est pas installé sur votre système
+2025-04-14 20:25:49,658 - ERROR - TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.
+2025-04-14 20:25:49,658 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 20:27:10,166 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:27:12,415 - INFO - Vérification de la configuration TWS...
+2025-04-14 20:27:12,417 - INFO - Thread de traitement des données démarré
+2025-04-14 20:37:30,478 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:37:32,626 - INFO - Vérification de la configuration TWS...
+2025-04-14 20:37:32,628 - INFO - Thread de traitement des données démarré
+2025-04-14 20:38:05,957 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:38:05,958 - INFO - Vérification des packages...
+2025-04-14 20:38:08,092 - INFO - Vérification de la configuration TWS...
+2025-04-14 20:38:08,093 - INFO - TWS est en cours d'exécution et accessible
+2025-04-14 20:38:08,093 - INFO - Initialisation de l'algorithme de trading...
+2025-04-14 20:38:08,095 - INFO - Thread de traitement des données démarré
+2025-04-14 20:40:50,072 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:40:50,072 - INFO - Vérification des packages...
+2025-04-14 20:40:52,229 - INFO - Vérification de la configuration TWS...
+2025-04-14 20:40:52,230 - INFO - TWS est en cours d'exécution et accessible
+2025-04-14 20:40:52,230 - INFO - Initialisation de l'algorithme de trading...
+2025-04-14 20:40:52,231 - INFO - Thread de traitement des données démarré
+2025-04-14 20:43:26,833 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:43:26,834 - INFO - Vérification des packages...
+2025-04-14 20:43:28,916 - INFO - Vérification de la configuration TWS...
+2025-04-14 20:43:28,917 - INFO - TWS est en cours d'exécution et accessible
+2025-04-14 20:43:28,917 - INFO - Initialisation de l'algorithme de trading...
+2025-04-14 20:43:28,918 - INFO - Thread de traitement des données démarré
+2025-04-14 20:47:21,818 - INFO - Arrêt manuel de l'algorithme...
+2025-04-14 20:47:21,819 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 20:47:42,550 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:47:42,550 - INFO - Vérification des packages...
+2025-04-14 20:47:44,653 - INFO - Vérification de la configuration TWS...
+2025-04-14 20:47:44,653 - INFO - TWS est en cours d'exécution et accessible
+2025-04-14 20:47:44,654 - INFO - Initialisation de l'algorithme de trading...
+2025-04-14 20:47:44,654 - INFO - Thread de traitement des données démarré
+2025-04-14 20:48:02,476 - INFO - Arrêt manuel de l'algorithme...
+2025-04-14 20:48:02,477 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 20:56:02,193 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:56:02,193 - INFO - Vérification des packages...
+2025-04-14 20:56:02,193 - ERROR - Erreur critique : name 'verify_packages' is not defined
+2025-04-14 20:56:02,193 - ERROR - Traceback complet :
+Traceback (most recent call last):
+  File "/Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé/Algorithme de Trading Quantitatif Optimisé", line 1234, in main
+    verify_packages()
+    ^^^^^^^^^^^^^^^
+NameError: name 'verify_packages' is not defined
+2025-04-14 20:56:02,194 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 20:56:21,288 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:56:21,288 - INFO - Vérification des packages...
+2025-04-14 20:56:21,288 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-14 20:56:21,288 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-14 20:56:21,288 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-14 20:56:21,288 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-14 20:56:21,288 - ERROR - Erreur critique : name 'subprocess' is not defined
+2025-04-14 20:56:21,288 - ERROR - Traceback complet :
+Traceback (most recent call last):
+  File "/Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé/Algorithme de Trading Quantitatif Optimisé", line 1240, in verify_packages
+    __import__(package.split('>=')[0])
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'scikit-learn'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé/Algorithme de Trading Quantitatif Optimisé", line 1255, in main
+    verify_packages()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé/Algorithme de Trading Quantitatif Optimisé", line 1245, in verify_packages
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+    ^^^^^^^^^^
+NameError: name 'subprocess' is not defined. Did you forget to import 'subprocess'?
+2025-04-14 20:56:21,289 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 20:56:46,297 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 20:56:46,297 - INFO - Vérification des packages...
+2025-04-14 20:56:46,297 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-14 20:56:46,297 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-14 20:56:46,298 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-14 20:56:46,298 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-14 20:56:46,693 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-14 20:56:46,693 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-14 20:56:46,693 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-14 20:56:46,693 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-14 20:56:46,693 - INFO - Vérification de la configuration TWS...
+2025-04-14 20:56:46,694 - INFO - TWS est en cours d'exécution et accessible
+2025-04-14 20:56:46,694 - INFO - Vérification de la configuration API...
+2025-04-14 20:56:46,694 - INFO - Vérification de la configuration TWS API...
+2025-04-14 21:30:59,743 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 21:32:50,677 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 21:32:50,677 - INFO - Vérification des packages...
+2025-04-14 21:32:50,677 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-14 21:32:50,677 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-14 21:32:50,677 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-14 21:32:50,677 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-14 21:32:51,111 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-14 21:32:51,111 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-14 21:32:51,111 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-14 21:32:51,111 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-14 21:32:51,111 - INFO - Vérification de la configuration TWS...
+2025-04-14 21:32:51,111 - INFO - TWS est en cours d'exécution et accessible
+2025-04-14 21:32:51,111 - INFO - Vérification de la configuration API...
+2025-04-14 21:32:51,112 - INFO - Vérification de la configuration TWS API...
+2025-04-14 21:33:01,952 - INFO - Arrêt manuel de l'algorithme...
+2025-04-14 21:33:01,955 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 21:33:18,014 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 21:33:18,014 - INFO - Vérification des packages...
+2025-04-14 21:33:18,014 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-14 21:33:18,014 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-14 21:33:18,014 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-14 21:33:18,014 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-14 21:33:18,408 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-14 21:33:18,408 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-14 21:33:18,408 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-14 21:33:18,408 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-14 21:33:18,408 - INFO - Vérification de la configuration TWS...
+2025-04-14 21:33:18,409 - INFO - TWS est en cours d'exécution et accessible
+2025-04-14 21:33:18,409 - INFO - Vérification de la configuration API...
+2025-04-14 21:33:18,409 - INFO - Vérification de la configuration TWS API...
+2025-04-14 21:36:05,258 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 21:36:05,259 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-14 21:36:05,259 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-14 21:36:05,259 - INFO - Vérification des packages...
+2025-04-14 21:36:05,259 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-14 21:36:05,259 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-14 21:36:05,259 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-14 21:36:05,259 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-14 21:36:05,664 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-14 21:36:05,664 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-14 21:36:05,664 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-14 21:36:05,664 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-14 21:36:05,664 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-14 21:36:05,664 - INFO - TWS est en cours d'exécution et accessible
+2025-04-14 21:36:05,665 - INFO - Vérification détaillée de la configuration API...
+2025-04-14 21:36:05,665 - INFO - Vérification de la configuration TWS API...
+2025-04-14 22:21:37,128 - INFO - Démarrage de l'algorithme de trading...
+2025-04-14 22:21:37,128 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-14 22:21:37,128 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-14 22:21:37,128 - INFO - Vérification des packages...
+2025-04-14 22:21:37,128 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-14 22:21:37,128 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-14 22:21:37,129 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-14 22:21:37,129 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-14 22:21:37,587 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-14 22:21:37,587 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-14 22:21:37,587 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-14 22:21:37,587 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-14 22:21:37,587 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-14 22:21:37,588 - INFO - TWS est en cours d'exécution et accessible
+2025-04-14 22:21:37,588 - INFO - Vérification détaillée de la configuration API...
+2025-04-14 22:21:37,588 - INFO - Vérification de la configuration TWS API...
+2025-04-14 23:25:43,741 - INFO - Arrêt manuel de l'algorithme...
+2025-04-14 23:25:43,748 - INFO - Fermeture propre de l'algorithme...
+2025-04-14 23:25:43,748 - INFO - Algorithme arrêté avec succès
+2025-04-16 12:01:50,191 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 12:01:50,192 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 12:01:50,192 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 12:01:50,192 - INFO - Vérification des packages...
+2025-04-16 12:01:50,192 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 12:01:50,192 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 12:01:50,192 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 12:01:50,192 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 12:01:50,670 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 12:01:50,670 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 12:01:50,670 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 12:01:50,670 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 12:01:50,670 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 12:01:50,671 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 12:01:50,671 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 12:01:50,671 - INFO - Vérification de la configuration TWS API...
+2025-04-16 12:03:11,621 - INFO - Arrêt manuel de l'algorithme...
+2025-04-16 12:03:11,622 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 12:03:11,622 - INFO - Algorithme arrêté avec succès
+2025-04-16 12:03:33,075 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 12:03:33,075 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 12:03:33,075 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 12:03:33,075 - INFO - Vérification des packages...
+2025-04-16 12:03:33,075 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 12:03:33,075 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 12:03:33,075 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 12:03:33,076 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 12:03:33,411 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 12:03:33,412 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 12:03:33,412 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 12:03:33,412 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 12:03:33,412 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 12:03:33,412 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 12:03:33,412 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 12:03:33,413 - INFO - Vérification de la configuration TWS API...
+2025-04-16 12:04:36,187 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 12:04:36,187 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 12:04:36,187 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 12:04:36,187 - INFO - Vérification des packages...
+2025-04-16 12:04:36,188 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 12:04:36,188 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 12:04:36,188 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 12:04:36,188 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 12:04:36,555 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 12:04:36,555 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 12:04:36,555 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 12:04:36,555 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 12:04:36,555 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 12:04:36,556 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 12:04:36,556 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 12:04:36,556 - INFO - Vérification de la configuration TWS API...
+2025-04-16 12:22:33,783 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 12:22:33,783 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 12:22:33,784 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 12:22:33,784 - INFO - Vérification des packages...
+2025-04-16 12:22:33,784 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 12:22:33,784 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 12:22:33,784 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 12:22:33,784 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 12:22:34,206 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 12:22:34,207 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 12:22:34,207 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 12:22:34,207 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 12:22:34,207 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 12:22:34,207 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 12:22:34,207 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 12:22:34,207 - INFO - Vérification de la configuration TWS API...
+2025-04-16 12:29:51,716 - WARNING - Disconnected; resetting connection
+2025-04-16 12:29:51,716 - WARNING - Disconnected; resetting connection
+2025-04-16 12:29:56,793 - ERROR - ✗ Échec de la configuration TWS API
+2025-04-16 12:29:56,795 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-16 12:29:56,795 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 12:29:56,795 - INFO - Algorithme arrêté avec succès
+2025-04-16 12:29:56,821 - ERROR - ✗ Échec de la configuration TWS API
+2025-04-16 12:29:56,821 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-16 12:29:56,822 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 12:29:56,822 - INFO - Algorithme arrêté avec succès
+2025-04-16 12:35:25,708 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 12:35:25,709 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 12:35:25,709 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 12:35:25,709 - INFO - Vérification des packages...
+2025-04-16 12:35:25,709 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 12:35:25,709 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 12:35:25,709 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 12:35:25,709 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 12:35:26,124 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 12:35:26,124 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 12:35:26,125 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 12:35:26,125 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 12:35:26,125 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 12:35:26,125 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 12:35:26,125 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 12:35:26,126 - INFO - Vérification de la configuration TWS API...
+2025-04-16 12:36:47,771 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 12:36:47,771 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 12:36:47,771 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 12:36:47,771 - INFO - Vérification des packages...
+2025-04-16 12:36:47,771 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 12:36:47,771 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 12:36:47,771 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 12:36:47,771 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 12:36:48,159 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 12:36:48,160 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 12:36:48,160 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 12:36:48,160 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 12:36:48,160 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 12:36:48,161 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 12:36:48,161 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 12:36:48,161 - INFO - Vérification de la configuration TWS API...
+2025-04-16 13:13:04,809 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 13:13:04,809 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 13:13:04,809 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 13:13:04,809 - INFO - Vérification des packages...
+2025-04-16 13:13:04,809 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 13:13:04,809 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 13:13:04,809 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 13:13:04,809 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 13:13:05,178 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 13:13:05,178 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 13:13:05,178 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 13:13:05,178 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 13:13:05,178 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 13:13:05,179 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 13:13:05,179 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 13:13:05,179 - INFO - Vérification de la configuration TWS API...
+2025-04-16 14:07:32,023 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 14:07:32,023 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 14:07:32,023 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 14:07:32,023 - INFO - Vérification des packages...
+2025-04-16 14:07:32,023 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 14:07:32,023 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 14:07:32,023 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 14:07:32,023 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 14:07:32,409 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 14:07:32,409 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 14:07:32,409 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 14:07:32,409 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 14:07:32,409 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 14:07:32,410 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 14:07:32,410 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 14:07:32,410 - INFO - Vérification de la configuration TWS API...
+2025-04-16 14:13:29,663 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 14:13:29,663 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 14:13:29,663 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 14:13:29,663 - INFO - Vérification des packages...
+2025-04-16 14:13:29,663 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 14:13:29,663 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 14:13:29,663 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 14:13:29,663 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 14:13:30,033 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 14:13:30,033 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 14:13:30,033 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 14:13:30,033 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 14:13:30,033 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 14:13:30,033 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 14:13:30,033 - INFO - -----------------------------
+2025-04-16 14:13:30,043 - ERROR - ✗ Le processus TWS n'est pas en cours d'exécution
+2025-04-16 14:13:30,043 - ERROR - TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.
+2025-04-16 14:13:30,043 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 14:13:30,043 - INFO - Algorithme arrêté avec succès
+2025-04-16 14:29:17,918 - WARNING - Disconnected; resetting connection
+2025-04-16 14:29:17,918 - WARNING - Disconnected; resetting connection
+2025-04-16 14:29:23,000 - ERROR - ✗ Échec de la configuration TWS API
+2025-04-16 14:29:23,000 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-16 14:29:23,001 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 14:29:23,001 - INFO - Algorithme arrêté avec succès
+2025-04-16 14:29:23,001 - ERROR - ✗ Échec de la configuration TWS API
+2025-04-16 14:29:23,002 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-16 14:29:23,002 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 14:29:23,002 - INFO - Algorithme arrêté avec succès
+2025-04-16 14:29:50,338 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 14:29:50,339 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 14:29:50,339 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 14:29:50,339 - INFO - Vérification des packages...
+2025-04-16 14:29:50,339 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 14:29:50,339 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 14:29:50,339 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 14:29:50,339 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 14:29:50,723 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 14:29:50,724 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 14:29:50,724 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 14:29:50,724 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 14:29:50,724 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 14:29:50,724 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 14:29:50,724 - INFO - -----------------------------
+2025-04-16 14:29:50,731 - ERROR - ✗ Le processus TWS n'est pas en cours d'exécution
+2025-04-16 14:29:50,731 - ERROR - TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.
+2025-04-16 14:29:50,731 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 14:29:50,731 - INFO - Algorithme arrêté avec succès
+2025-04-16 14:31:33,748 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 14:31:33,749 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 14:31:33,749 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 14:31:33,749 - INFO - Vérification des packages...
+2025-04-16 14:31:33,749 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 14:31:33,749 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 14:31:33,749 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 14:31:33,749 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 14:31:34,089 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 14:31:34,090 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 14:31:34,090 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 14:31:34,090 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 14:31:34,090 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 14:31:34,090 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 14:31:34,090 - INFO - -----------------------------
+2025-04-16 14:31:34,097 - ERROR - ✗ Le processus TWS n'est pas en cours d'exécution
+2025-04-16 14:31:34,097 - ERROR - TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.
+2025-04-16 14:31:34,098 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 14:31:34,098 - INFO - Algorithme arrêté avec succès
+2025-04-16 14:34:12,578 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 14:34:12,578 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 14:34:12,578 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 14:34:12,579 - INFO - Vérification des packages...
+2025-04-16 14:34:12,579 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 14:34:12,579 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 14:34:12,579 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 14:34:12,579 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 14:34:12,921 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 14:34:12,921 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 14:34:12,921 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 14:34:12,922 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 14:34:12,922 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 14:34:12,922 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 14:34:12,922 - INFO - -----------------------------
+2025-04-16 14:34:12,929 - ERROR - ✗ Le processus TWS n'est pas en cours d'exécution
+2025-04-16 14:34:12,929 - ERROR - TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.
+2025-04-16 14:34:12,929 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 14:34:12,929 - INFO - Algorithme arrêté avec succès
+2025-04-16 14:36:04,665 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 14:36:04,665 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 14:36:04,665 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 14:36:04,665 - INFO - Vérification des packages...
+2025-04-16 14:36:04,665 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 14:36:04,665 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 14:36:04,665 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 14:36:04,665 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 14:36:05,013 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 14:36:05,013 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 14:36:05,013 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 14:36:05,013 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 14:36:05,013 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 14:36:05,014 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 14:36:05,014 - INFO - -----------------------------
+2025-04-16 14:36:05,021 - ERROR - ✗ Le processus TWS n'est pas en cours d'exécution
+2025-04-16 14:36:05,021 - ERROR - TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.
+2025-04-16 14:36:05,021 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 14:36:05,021 - INFO - Algorithme arrêté avec succès
+2025-04-16 14:36:57,589 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 14:36:57,590 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 14:36:57,590 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 14:36:57,590 - INFO - Vérification des packages...
+2025-04-16 14:36:57,590 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 14:36:57,590 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 14:36:57,590 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 14:36:57,590 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 14:36:57,926 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 14:36:57,927 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 14:36:57,927 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 14:36:57,927 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 14:36:57,927 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 14:36:57,927 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 14:36:57,927 - INFO - -----------------------------
+2025-04-16 14:36:57,939 - INFO - Processus TWS trouvé: PID 13569
+2025-04-16 14:36:57,939 - INFO - ✓ Processus TWS détecté
+2025-04-16 14:36:57,939 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-16 14:36:57,939 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 14:36:57,939 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 14:36:57,939 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 14:36:57,939 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-16 14:36:57,939 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 14:36:57,939 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 14:36:57,939 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-16 14:36:57,939 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 14:36:57,939 - INFO - -----------------------------
+2025-04-16 14:36:57,946 - INFO - Processus TWS trouvé: PID 13569
+2025-04-16 14:36:57,946 - INFO - ✓ Processus TWS détecté
+2025-04-16 14:36:57,946 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-16 14:36:57,946 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 14:36:57,946 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 14:36:57,947 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 14:36:57,947 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-16 14:36:57,947 - INFO - Tentative de connexion à TWS...
+2025-04-16 14:36:57,947 - ERROR - ✗ Le port TWS n'est pas configuré correctement
+2025-04-16 14:36:57,947 - INFO - could not connect
+2025-04-16 14:36:57,947 - INFO - disconnecting
+2025-04-16 14:36:57,947 - INFO - ANSWER connectionClosed {}
+2025-04-16 14:37:08,033 - ERROR - ✗ Échec de la connexion à TWS
+2025-04-16 14:37:08,033 - ERROR - Code 502: Couldn't connect to TWS. Confirm that "Enable ActiveX and Socket EClients" 
+is enabled and connection port is the same as "Socket Port" on the 
+TWS "Edit->Global Configuration...->API->Settings" menu. Live Trading ports: 
+TWS: 7496; IB Gateway: 4001. Simulated Trading ports for new installations 
+of version 954.1 or newer:  TWS: 7497; IB Gateway: 4002
+2025-04-16 14:37:08,034 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-16 14:37:08,034 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 14:37:08,034 - INFO - Algorithme arrêté avec succès
+2025-04-16 14:37:49,603 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 14:37:49,604 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 14:37:49,604 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 14:37:49,604 - INFO - Vérification des packages...
+2025-04-16 14:37:49,604 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 14:37:49,604 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 14:37:49,604 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 14:37:49,604 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 14:37:49,975 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 14:37:49,975 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 14:37:49,975 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 14:37:49,975 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 14:37:49,975 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 14:37:49,975 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 14:37:49,975 - INFO - -----------------------------
+2025-04-16 14:37:49,985 - INFO - Processus TWS trouvé: PID 13569
+2025-04-16 14:37:49,985 - INFO - ✓ Processus TWS détecté
+2025-04-16 14:37:49,985 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-16 14:37:49,985 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 14:37:49,985 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 14:37:49,985 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 14:37:49,985 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-16 14:37:49,985 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 14:37:49,985 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 14:37:49,985 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-16 14:37:49,986 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 14:37:49,986 - INFO - -----------------------------
+2025-04-16 14:37:49,992 - INFO - Processus TWS trouvé: PID 13569
+2025-04-16 14:37:49,992 - INFO - ✓ Processus TWS détecté
+2025-04-16 14:37:49,992 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-16 14:37:49,992 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 14:37:49,992 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 14:37:49,992 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 14:37:49,992 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-16 14:37:49,992 - INFO - Tentative de connexion à TWS...
+2025-04-16 14:37:49,992 - ERROR - ✗ Le port TWS n'est pas configuré correctement
+2025-04-16 14:37:49,992 - INFO - could not connect
+2025-04-16 14:37:49,992 - INFO - disconnecting
+2025-04-16 14:37:49,992 - INFO - ANSWER connectionClosed {}
+2025-04-16 14:38:00,042 - ERROR - ✗ Échec de la connexion à TWS
+2025-04-16 14:38:00,043 - ERROR - Code 502: Couldn't connect to TWS. Confirm that "Enable ActiveX and Socket EClients" 
+is enabled and connection port is the same as "Socket Port" on the 
+TWS "Edit->Global Configuration...->API->Settings" menu. Live Trading ports: 
+TWS: 7496; IB Gateway: 4001. Simulated Trading ports for new installations 
+of version 954.1 or newer:  TWS: 7497; IB Gateway: 4002
+2025-04-16 14:38:00,043 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-16 14:38:00,043 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 14:38:00,043 - INFO - Algorithme arrêté avec succès
+2025-04-16 17:33:08,452 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 17:33:08,453 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 17:33:08,453 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 17:33:08,453 - INFO - Vérification des packages...
+2025-04-16 17:33:08,453 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 17:33:08,453 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 17:33:08,453 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 17:33:08,453 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 17:33:08,803 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 17:33:08,803 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 17:33:08,803 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 17:33:08,804 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 17:33:08,804 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 17:33:08,804 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 17:33:08,804 - INFO - -----------------------------
+2025-04-16 17:33:08,811 - INFO - Processus TWS trouvé: PID 15219
+2025-04-16 17:33:08,811 - INFO - ✓ Processus TWS détecté
+2025-04-16 17:33:08,811 - INFO - TWS Live (Port 7496): ✗ Non disponible
+2025-04-16 17:33:08,811 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 17:33:08,811 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 17:33:08,811 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 17:33:08,811 - ERROR - ✗ Aucun port TWS n'est disponible
+2025-04-16 17:33:08,811 - ERROR - Veuillez vérifier que TWS est bien démarré et que l'API est activée
+2025-04-16 17:33:08,811 - ERROR - TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.
+2025-04-16 17:33:08,812 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 17:33:08,812 - INFO - Algorithme arrêté avec succès
+2025-04-16 17:34:09,963 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 17:34:09,963 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 17:34:09,963 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 17:34:09,963 - INFO - Vérification des packages...
+2025-04-16 17:34:09,963 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 17:34:09,964 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 17:34:09,964 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 17:34:09,964 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 17:34:10,313 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 17:34:10,313 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 17:34:10,313 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 17:34:10,313 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 17:34:10,313 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 17:34:10,313 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 17:34:10,313 - INFO - -----------------------------
+2025-04-16 17:34:10,321 - INFO - Processus TWS trouvé: PID 15219
+2025-04-16 17:34:10,321 - INFO - ✓ Processus TWS détecté
+2025-04-16 17:34:10,321 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-16 17:34:10,321 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 17:34:10,321 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 17:34:10,321 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 17:34:10,321 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-16 17:34:10,321 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 17:34:10,321 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 17:34:10,321 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-16 17:34:10,321 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 17:34:10,321 - INFO - -----------------------------
+2025-04-16 17:34:10,326 - INFO - Processus TWS trouvé: PID 15219
+2025-04-16 17:34:10,326 - INFO - ✓ Processus TWS détecté
+2025-04-16 17:34:10,327 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-16 17:34:10,327 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 17:34:10,327 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 17:34:10,327 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 17:34:10,327 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-16 17:34:10,327 - INFO - Tentative de connexion à TWS...
+2025-04-16 17:34:10,327 - ERROR - ✗ Le port TWS n'est pas configuré correctement
+2025-04-16 17:34:10,327 - INFO - could not connect
+2025-04-16 17:34:10,327 - INFO - disconnecting
+2025-04-16 17:34:10,327 - INFO - ANSWER connectionClosed {}
+2025-04-16 17:34:20,402 - ERROR - ✗ Échec de la connexion à TWS
+2025-04-16 17:34:20,403 - ERROR - Code 502: Couldn't connect to TWS. Confirm that "Enable ActiveX and Socket EClients" 
+is enabled and connection port is the same as "Socket Port" on the 
+TWS "Edit->Global Configuration...->API->Settings" menu. Live Trading ports: 
+TWS: 7496; IB Gateway: 4001. Simulated Trading ports for new installations 
+of version 954.1 or newer:  TWS: 7497; IB Gateway: 4002
+2025-04-16 17:34:20,403 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-16 17:34:20,404 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 17:34:20,404 - INFO - Algorithme arrêté avec succès
+2025-04-16 17:35:47,318 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 17:35:47,318 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 17:35:47,318 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 17:35:47,318 - INFO - Vérification des packages...
+2025-04-16 17:35:47,318 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 17:35:47,318 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 17:35:47,318 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 17:35:47,318 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 17:35:47,651 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 17:35:47,651 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 17:35:47,651 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 17:35:47,651 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 17:35:47,651 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 17:35:47,651 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 17:35:47,651 - INFO - -----------------------------
+2025-04-16 17:35:47,658 - INFO - Processus TWS trouvé: PID 15219
+2025-04-16 17:35:47,658 - INFO - ✓ Processus TWS détecté
+2025-04-16 17:35:47,658 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-16 17:35:47,658 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 17:35:47,658 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 17:35:47,658 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 17:35:47,658 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-16 17:35:47,658 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 17:35:47,658 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 17:35:47,658 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-16 17:35:47,659 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 17:35:47,659 - INFO - -----------------------------
+2025-04-16 17:35:47,663 - INFO - Processus TWS trouvé: PID 15219
+2025-04-16 17:35:47,663 - INFO - ✓ Processus TWS détecté
+2025-04-16 17:35:47,664 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-16 17:35:47,664 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 17:35:47,664 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 17:35:47,664 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 17:35:47,664 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-16 17:35:47,664 - INFO - Tentative de connexion à TWS...
+2025-04-16 17:35:47,664 - INFO - Vérification des paramètres API...
+2025-04-16 17:47:10,710 - WARNING - Disconnected; resetting connection
+2025-04-16 17:47:20,748 - ERROR - ✗ Échec de la connexion à TWS
+2025-04-16 17:47:20,749 - ERROR - 
+Guide de configuration détaillé :
+2025-04-16 17:47:20,749 - ERROR - 1. Dans TWS, allez dans File > Global Configuration (Alt+G)
+2025-04-16 17:47:20,749 - ERROR - 2. Sélectionnez 'API' dans le menu de gauche
+2025-04-16 17:47:20,749 - ERROR - 3. Vérifiez que :
+2025-04-16 17:47:20,749 - ERROR -    - 'Enable ActiveX and Socket Clients' est coché
+2025-04-16 17:47:20,749 - ERROR -    - 'Socket port' est défini sur 7496
+2025-04-16 17:47:20,749 - ERROR -    - 'Allow connections from localhost only' est coché
+2025-04-16 17:47:20,750 - ERROR -    - '127.0.0.1' est ajouté dans 'Trusted IP Addresses'
+2025-04-16 17:47:20,750 - ERROR - 4. Redémarrez TWS après avoir modifié ces paramètres
+2025-04-16 17:47:20,750 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-16 17:47:20,750 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 17:47:20,750 - INFO - Algorithme arrêté avec succès
+2025-04-16 17:48:29,311 - INFO - Démarrage de l'algorithme de trading...
+2025-04-16 17:48:29,311 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-16 17:48:29,311 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-16 17:48:29,311 - INFO - Vérification des packages...
+2025-04-16 17:48:29,311 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-16 17:48:29,311 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-16 17:48:29,311 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-16 17:48:29,311 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-16 17:48:29,656 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-16 17:48:29,656 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-16 17:48:29,656 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-16 17:48:29,656 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-16 17:48:29,656 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-16 17:48:29,657 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 17:48:29,657 - INFO - -----------------------------
+2025-04-16 17:48:29,667 - INFO - Processus TWS trouvé: PID 25817
+2025-04-16 17:48:29,667 - INFO - ✓ Processus TWS détecté
+2025-04-16 17:48:29,667 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-16 17:48:29,667 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 17:48:29,667 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 17:48:29,667 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 17:48:29,667 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-16 17:48:29,667 - INFO - TWS est en cours d'exécution et accessible
+2025-04-16 17:48:29,667 - INFO - Vérification détaillée de la configuration API...
+2025-04-16 17:48:29,667 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-16 17:48:29,667 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-16 17:48:29,668 - INFO - -----------------------------
+2025-04-16 17:48:29,674 - INFO - Processus TWS trouvé: PID 25817
+2025-04-16 17:48:29,674 - INFO - ✓ Processus TWS détecté
+2025-04-16 17:48:29,674 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-16 17:48:29,674 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-16 17:48:29,674 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-16 17:48:29,674 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-16 17:48:29,674 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-16 17:48:29,675 - INFO - Tentative de connexion à TWS...
+2025-04-16 17:48:29,675 - INFO - Vérification des paramètres API...
+2025-04-16 18:05:48,796 - WARNING - Disconnected; resetting connection
+2025-04-16 18:05:58,882 - ERROR - ✗ Échec de la connexion à TWS
+2025-04-16 18:05:58,884 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-16 18:05:58,884 - INFO - Fermeture propre de l'algorithme...
+2025-04-16 18:05:58,884 - INFO - Algorithme arrêté avec succès
+2025-04-17 13:49:50,400 - INFO - Démarrage de l'algorithme de trading...
+2025-04-17 13:49:50,401 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-17 13:49:50,401 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-17 13:49:50,401 - INFO - Vérification des packages...
+2025-04-17 13:49:50,401 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-17 13:49:50,401 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-17 13:49:50,401 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-17 13:49:50,401 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-17 13:49:50,826 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-17 13:49:50,826 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-17 13:49:50,826 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-17 13:49:50,826 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-17 13:49:50,826 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-17 13:49:50,826 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 13:49:50,826 - INFO - -----------------------------
+2025-04-17 13:49:50,844 - INFO - Processus TWS trouvé: PID 62120
+2025-04-17 13:49:50,844 - INFO - ✓ Processus TWS détecté
+2025-04-17 13:49:50,844 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-17 13:49:50,844 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-17 13:49:50,844 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 13:49:50,845 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 13:49:50,845 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 13:49:50,845 - INFO - TWS est en cours d'exécution et accessible
+2025-04-17 13:49:50,845 - INFO - Vérification détaillée de la configuration API...
+2025-04-17 13:49:50,845 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-17 13:49:50,845 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 13:49:50,845 - INFO - -----------------------------
+2025-04-17 13:49:50,857 - INFO - Processus TWS trouvé: PID 62120
+2025-04-17 13:49:50,857 - INFO - ✓ Processus TWS détecté
+2025-04-17 13:49:50,857 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-17 13:49:50,857 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-17 13:49:50,857 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 13:49:50,857 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 13:49:50,857 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 13:49:50,858 - INFO - Tentative de connexion à TWS...
+2025-04-17 13:49:50,858 - INFO - Vérification des paramètres API...
+2025-04-17 16:21:16,906 - INFO - Démarrage de l'algorithme de trading...
+2025-04-17 16:21:16,907 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-17 16:21:16,907 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-17 16:21:16,907 - INFO - Vérification des packages...
+2025-04-17 16:21:16,907 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-17 16:21:16,907 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-17 16:21:16,907 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-17 16:21:16,907 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-17 16:21:17,331 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-17 16:21:17,331 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-17 16:21:17,331 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-17 16:21:17,331 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-17 16:21:17,331 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-17 16:21:17,331 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 16:21:17,331 - INFO - -----------------------------
+2025-04-17 16:21:17,349 - INFO - Processus TWS trouvé: PID 79554
+2025-04-17 16:21:17,349 - INFO - ✓ Processus TWS détecté
+2025-04-17 16:21:17,349 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-17 16:21:17,349 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-17 16:21:17,350 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 16:21:17,350 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 16:21:17,350 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 16:21:17,350 - INFO - TWS est en cours d'exécution et accessible
+2025-04-17 16:21:17,350 - INFO - Vérification détaillée de la configuration API...
+2025-04-17 16:21:17,350 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-17 16:21:17,350 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 16:21:17,350 - INFO - -----------------------------
+2025-04-17 16:21:17,361 - INFO - Processus TWS trouvé: PID 79554
+2025-04-17 16:21:17,361 - INFO - ✓ Processus TWS détecté
+2025-04-17 16:21:17,361 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-17 16:21:17,361 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-17 16:21:17,361 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 16:21:17,361 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 16:21:17,361 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 16:21:17,362 - INFO - Tentative de connexion à TWS...
+2025-04-17 16:21:17,362 - INFO - Vérification des paramètres API...
+2025-04-17 16:25:26,085 - WARNING - Disconnected; resetting connection
+2025-04-17 16:25:36,146 - ERROR - ✗ Échec de la connexion à TWS
+2025-04-17 16:25:36,148 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-17 16:25:36,148 - INFO - Fermeture propre de l'algorithme...
+2025-04-17 16:25:36,149 - INFO - Algorithme arrêté avec succès
+2025-04-17 16:30:24,201 - INFO - Démarrage de l'algorithme de trading...
+2025-04-17 16:30:24,201 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-17 16:30:24,201 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-17 16:30:24,201 - INFO - Vérification des packages...
+2025-04-17 16:30:24,201 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-17 16:30:24,201 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-17 16:30:24,201 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-17 16:30:24,201 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-17 16:30:24,569 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-17 16:30:24,569 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-17 16:30:24,569 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-17 16:30:24,569 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-17 16:30:24,570 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-17 16:30:24,570 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 16:30:24,570 - INFO - -----------------------------
+2025-04-17 16:30:24,588 - INFO - Processus TWS trouvé: PID 81689
+2025-04-17 16:30:24,588 - INFO - ✓ Processus TWS détecté
+2025-04-17 16:30:24,588 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-17 16:30:24,588 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-17 16:30:24,588 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 16:30:24,588 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 16:30:24,588 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 16:30:24,588 - INFO - TWS est en cours d'exécution et accessible
+2025-04-17 16:30:24,588 - INFO - Vérification détaillée de la configuration API...
+2025-04-17 16:30:24,588 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-17 16:30:24,588 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 16:30:24,588 - INFO - -----------------------------
+2025-04-17 16:30:24,601 - INFO - Processus TWS trouvé: PID 81689
+2025-04-17 16:30:24,601 - INFO - ✓ Processus TWS détecté
+2025-04-17 16:30:24,601 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-17 16:30:24,602 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-17 16:30:24,602 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 16:30:24,602 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 16:30:24,602 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 16:30:24,602 - INFO - Tentative de connexion à TWS...
+2025-04-17 16:30:24,602 - INFO - Vérification des paramètres API...
+2025-04-17 16:58:45,920 - INFO - Démarrage de l'algorithme de trading...
+2025-04-17 16:58:45,920 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-17 16:58:45,920 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-17 16:58:45,920 - INFO - Vérification des packages...
+2025-04-17 16:58:45,920 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-17 16:58:45,920 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-17 16:58:45,920 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-17 16:58:45,920 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-17 16:58:46,295 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-17 16:58:46,295 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-17 16:58:46,295 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-17 16:58:46,295 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-17 16:58:46,295 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-17 16:58:46,295 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 16:58:46,295 - INFO - -----------------------------
+2025-04-17 16:58:46,316 - INFO - Processus TWS trouvé: PID 87882
+2025-04-17 16:58:46,316 - INFO - ✓ Processus TWS détecté
+2025-04-17 16:58:46,316 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-17 16:58:46,316 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-17 16:58:46,317 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 16:58:46,317 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 16:58:46,317 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 16:58:46,317 - INFO - TWS est en cours d'exécution et accessible
+2025-04-17 16:58:46,317 - INFO - Vérification détaillée de la configuration API...
+2025-04-17 16:58:46,317 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-17 16:58:46,317 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 16:58:46,317 - INFO - -----------------------------
+2025-04-17 16:58:46,331 - INFO - Processus TWS trouvé: PID 87882
+2025-04-17 16:58:46,331 - INFO - ✓ Processus TWS détecté
+2025-04-17 16:58:46,331 - INFO - TWS Live (Port 7496): ✓ En cours d'exécution
+2025-04-17 16:58:46,332 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-17 16:58:46,332 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 16:58:46,332 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 16:58:46,332 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 16:58:46,332 - INFO - Tentative de connexion à TWS...
+2025-04-17 16:58:46,332 - INFO - Vérification des paramètres API...
+2025-04-17 17:14:31,539 - INFO - Démarrage de l'algorithme de trading...
+2025-04-17 17:14:31,540 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-17 17:14:31,540 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-17 17:14:31,540 - INFO - Vérification des packages...
+2025-04-17 17:14:31,540 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-17 17:14:31,540 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-17 17:14:31,540 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-17 17:14:31,540 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-17 17:14:31,898 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-17 17:14:31,898 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-17 17:14:31,898 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-17 17:14:31,898 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-17 17:14:31,898 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-17 17:14:31,898 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 17:14:31,898 - INFO - -----------------------------
+2025-04-17 17:14:31,916 - INFO - Processus TWS trouvé: PID 90768
+2025-04-17 17:14:31,916 - INFO - ✓ Processus TWS détecté
+2025-04-17 17:14:31,916 - INFO - TWS Live (Port 7496): ✗ Non disponible
+2025-04-17 17:14:31,917 - INFO - TWS Paper (Port 7497): ✓ En cours d'exécution
+2025-04-17 17:14:31,917 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 17:14:31,917 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 17:14:31,917 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 17:14:31,917 - INFO - TWS est en cours d'exécution et accessible
+2025-04-17 17:14:31,917 - INFO - Vérification détaillée de la configuration API...
+2025-04-17 17:14:31,917 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-17 17:14:31,917 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 17:14:31,917 - INFO - -----------------------------
+2025-04-17 17:14:31,929 - INFO - Processus TWS trouvé: PID 90768
+2025-04-17 17:14:31,929 - INFO - ✓ Processus TWS détecté
+2025-04-17 17:14:31,929 - INFO - TWS Live (Port 7496): ✗ Non disponible
+2025-04-17 17:14:31,929 - INFO - TWS Paper (Port 7497): ✓ En cours d'exécution
+2025-04-17 17:14:31,929 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 17:14:31,929 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 17:14:31,929 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 17:14:31,929 - INFO - Tentative de connexion à TWS...
+2025-04-17 17:14:31,929 - INFO - Vérification des paramètres API...
+2025-04-17 17:14:31,930 - ERROR - ✗ Le port TWS n'est pas configuré correctement
+2025-04-17 17:14:31,930 - ERROR - 
+                    Vérifiez que :
+                    1. Dans TWS, allez dans File > Global Configuration (Alt+G)
+                    2. Sélectionnez 'API' dans le menu de gauche
+                    3. Vérifiez que :
+                       - 'Enable ActiveX and Socket Clients' est coché
+                       - 'Socket port' est défini sur 7496
+                       - 'Allow connections from localhost only' est coché
+                       - '127.0.0.1' est ajouté dans 'Trusted IP Addresses'
+                    4. Redémarrez TWS après avoir modifié ces paramètres
+                    
+2025-04-17 17:14:31,930 - INFO - could not connect
+2025-04-17 17:14:31,930 - INFO - disconnecting
+2025-04-17 17:14:31,930 - INFO - ANSWER connectionClosed {}
+2025-04-17 17:14:41,991 - ERROR - ✗ Échec de la connexion à TWS
+2025-04-17 17:14:41,993 - ERROR - Code 502: Couldn't connect to TWS. Confirm that "Enable ActiveX and Socket EClients" 
+is enabled and connection port is the same as "Socket Port" on the 
+TWS "Edit->Global Configuration...->API->Settings" menu. Live Trading ports: 
+TWS: 7496; IB Gateway: 4001. Simulated Trading ports for new installations 
+of version 954.1 or newer:  TWS: 7497; IB Gateway: 4002
+2025-04-17 17:14:41,993 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-17 17:14:41,994 - INFO - Fermeture propre de l'algorithme...
+2025-04-17 17:14:41,994 - INFO - Algorithme arrêté avec succès
+2025-04-17 17:16:11,410 - INFO - Démarrage de l'algorithme de trading...
+2025-04-17 17:16:11,410 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-17 17:16:11,410 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-17 17:16:11,410 - INFO - Vérification des packages...
+2025-04-17 17:16:11,410 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-17 17:16:11,410 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-17 17:16:11,410 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-17 17:16:11,410 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-17 17:16:11,775 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-17 17:16:11,775 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-17 17:16:11,775 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-17 17:16:11,775 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-17 17:16:11,775 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-17 17:16:11,775 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 17:16:11,775 - INFO - -----------------------------
+2025-04-17 17:16:11,792 - INFO - Processus TWS trouvé: PID 90768
+2025-04-17 17:16:11,792 - INFO - ✓ Processus TWS détecté
+2025-04-17 17:16:11,792 - INFO - TWS Live (Port 7496): ✗ Non disponible
+2025-04-17 17:16:11,793 - INFO - TWS Paper (Port 7497): ✓ En cours d'exécution
+2025-04-17 17:16:11,793 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 17:16:11,793 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 17:16:11,793 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 17:16:11,793 - INFO - TWS est en cours d'exécution et accessible
+2025-04-17 17:16:11,793 - INFO - Vérification détaillée de la configuration API...
+2025-04-17 17:16:11,793 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-17 17:16:11,793 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 17:16:11,793 - INFO - -----------------------------
+2025-04-17 17:16:11,804 - INFO - Processus TWS trouvé: PID 90768
+2025-04-17 17:16:11,804 - INFO - ✓ Processus TWS détecté
+2025-04-17 17:16:11,804 - INFO - TWS Live (Port 7496): ✗ Non disponible
+2025-04-17 17:16:11,804 - INFO - TWS Paper (Port 7497): ✓ En cours d'exécution
+2025-04-17 17:16:11,804 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 17:16:11,804 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 17:16:11,804 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 17:16:11,804 - INFO - Tentative de connexion à TWS...
+2025-04-17 17:16:11,805 - INFO - Vérification des paramètres API...
+2025-04-17 17:16:11,805 - ERROR - ✗ Le port TWS n'est pas configuré correctement
+2025-04-17 17:16:11,805 - ERROR - 
+                    Vérifiez que :
+                    1. Dans TWS, allez dans File > Global Configuration (Alt+G)
+                    2. Sélectionnez 'API' dans le menu de gauche
+                    3. Vérifiez que :
+                       - 'Enable ActiveX and Socket Clients' est coché
+                       - 'Socket port' est défini sur 7496
+                       - 'Allow connections from localhost only' est coché
+                       - '127.0.0.1' est ajouté dans 'Trusted IP Addresses'
+                    4. Redémarrez TWS après avoir modifié ces paramètres
+                    
+2025-04-17 17:16:11,805 - INFO - could not connect
+2025-04-17 17:16:11,805 - INFO - disconnecting
+2025-04-17 17:16:11,805 - INFO - ANSWER connectionClosed {}
+2025-04-17 17:16:21,845 - ERROR - ✗ Échec de la connexion à TWS
+2025-04-17 17:16:21,846 - ERROR - Code 502: Couldn't connect to TWS. Confirm that "Enable ActiveX and Socket EClients" 
+is enabled and connection port is the same as "Socket Port" on the 
+TWS "Edit->Global Configuration...->API->Settings" menu. Live Trading ports: 
+TWS: 7496; IB Gateway: 4001. Simulated Trading ports for new installations 
+of version 954.1 or newer:  TWS: 7497; IB Gateway: 4002
+2025-04-17 17:16:21,846 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-17 17:16:21,847 - INFO - Fermeture propre de l'algorithme...
+2025-04-17 17:16:21,847 - INFO - Algorithme arrêté avec succès
+2025-04-17 17:22:40,684 - INFO - Démarrage de l'algorithme de trading...
+2025-04-17 17:22:40,685 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-17 17:22:40,685 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-17 17:22:40,685 - INFO - Vérification des packages...
+2025-04-17 17:22:40,685 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-17 17:22:40,685 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-17 17:22:40,685 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-17 17:22:40,685 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-17 17:22:41,082 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-17 17:22:41,082 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-17 17:22:41,082 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-17 17:22:41,082 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-17 17:22:41,082 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-17 17:22:41,082 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 17:22:41,082 - INFO - -----------------------------
+2025-04-17 17:22:41,100 - INFO - Processus TWS trouvé: PID 92018
+2025-04-17 17:22:41,100 - INFO - ✓ Processus TWS détecté
+2025-04-17 17:22:41,101 - INFO - TWS Live (Port 7496): ✗ Non disponible
+2025-04-17 17:22:41,101 - INFO - TWS Paper (Port 7497): ✗ Non disponible
+2025-04-17 17:22:41,101 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 17:22:41,101 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 17:22:41,101 - ERROR - ✗ Aucun port TWS n'est disponible
+2025-04-17 17:22:41,101 - ERROR - Veuillez vérifier que TWS est bien démarré et que l'API est activée
+2025-04-17 17:22:41,101 - ERROR - TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.
+2025-04-17 17:22:41,101 - INFO - Fermeture propre de l'algorithme...
+2025-04-17 17:22:41,101 - INFO - Algorithme arrêté avec succès
+2025-04-17 17:28:00,990 - INFO - Démarrage de l'algorithme de trading...
+2025-04-17 17:28:00,990 - INFO - Version Python : 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]
+2025-04-17 17:28:00,990 - INFO - Répertoire de travail : /Users/A.BEYE/Algorithme de Trading Quantitatif Optimisé
+2025-04-17 17:28:00,990 - INFO - Vérification des packages...
+2025-04-17 17:28:00,990 - INFO - ✓ numpy>=1.21.0 est installé
+2025-04-17 17:28:00,990 - INFO - ✓ pandas>=1.3.0 est installé
+2025-04-17 17:28:00,990 - WARNING - ✗ scikit-learn>=0.24.0 n'est pas installé
+2025-04-17 17:28:00,990 - INFO - Installation de scikit-learn>=0.24.0...
+2025-04-17 17:28:01,370 - INFO - ✓ scipy>=1.7.0 est installé
+2025-04-17 17:28:01,370 - INFO - ✓ matplotlib>=3.4.0 est installé
+2025-04-17 17:28:01,370 - INFO - ✓ joblib>=1.0.0 est installé
+2025-04-17 17:28:01,370 - INFO - ✓ ibapi>=9.81.1 est installé
+2025-04-17 17:28:01,370 - INFO - Vérification détaillée de la configuration TWS...
+2025-04-17 17:28:01,370 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 17:28:01,370 - INFO - -----------------------------
+2025-04-17 17:28:01,384 - INFO - Processus TWS trouvé: PID 92018
+2025-04-17 17:28:01,384 - INFO - ✓ Processus TWS détecté
+2025-04-17 17:28:01,384 - INFO - TWS Live (Port 7496): ✗ Non disponible
+2025-04-17 17:28:01,385 - INFO - TWS Paper (Port 7497): ✓ En cours d'exécution
+2025-04-17 17:28:01,385 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 17:28:01,385 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 17:28:01,385 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 17:28:01,385 - INFO - TWS est en cours d'exécution et accessible
+2025-04-17 17:28:01,385 - INFO - Vérification détaillée de la configuration API...
+2025-04-17 17:28:01,385 - INFO - Vérification détaillée de la configuration TWS API...
+2025-04-17 17:28:01,385 - INFO - 
+Vérification de TWS/Gateway :
+2025-04-17 17:28:01,385 - INFO - -----------------------------
+2025-04-17 17:28:01,394 - INFO - Processus TWS trouvé: PID 92018
+2025-04-17 17:28:01,394 - INFO - ✓ Processus TWS détecté
+2025-04-17 17:28:01,394 - INFO - TWS Live (Port 7496): ✗ Non disponible
+2025-04-17 17:28:01,394 - INFO - TWS Paper (Port 7497): ✓ En cours d'exécution
+2025-04-17 17:28:01,395 - INFO - Gateway Live (Port 4001): ✗ Non disponible
+2025-04-17 17:28:01,395 - INFO - Gateway Paper (Port 4002): ✗ Non disponible
+2025-04-17 17:28:01,395 - INFO - ✓ Au moins un port TWS est disponible
+2025-04-17 17:28:01,395 - INFO - Tentative de connexion à TWS...
+2025-04-17 17:28:01,395 - INFO - Vérification des paramètres API...
+2025-04-17 17:28:01,395 - ERROR - ✗ Le port TWS n'est pas configuré correctement
+2025-04-17 17:28:01,395 - ERROR - 
+                    Vérifiez que :
+                    1. Dans TWS, allez dans File > Global Configuration (Alt+G)
+                    2. Sélectionnez 'API' dans le menu de gauche
+                    3. Vérifiez que :
+                       - 'Enable ActiveX and Socket Clients' est coché
+                       - 'Socket port' est défini sur 7496
+                       - 'Allow connections from localhost only' est coché
+                       - '127.0.0.1' est ajouté dans 'Trusted IP Addresses'
+                    4. Redémarrez TWS après avoir modifié ces paramètres
+                    
+2025-04-17 17:28:01,395 - INFO - could not connect
+2025-04-17 17:28:01,395 - INFO - disconnecting
+2025-04-17 17:28:01,395 - INFO - ANSWER connectionClosed {}
+2025-04-17 17:28:11,464 - ERROR - ✗ Échec de la connexion à TWS
+2025-04-17 17:28:11,464 - ERROR - Code 502: Couldn't connect to TWS. Confirm that "Enable ActiveX and Socket EClients" 
+is enabled and connection port is the same as "Socket Port" on the 
+TWS "Edit->Global Configuration...->API->Settings" menu. Live Trading ports: 
+TWS: 7496; IB Gateway: 4001. Simulated Trading ports for new installations 
+of version 954.1 or newer:  TWS: 7497; IB Gateway: 4002
+2025-04-17 17:28:11,464 - ERROR - Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.
+2025-04-17 17:28:11,465 - INFO - Fermeture propre de l'algorithme...
+2025-04-17 17:28:11,465 - INFO - Algorithme arrêté avec succès
