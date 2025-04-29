@@ -1,0 +1,1614 @@
+"""
+Algorithme de Trading Quantitatif Optimisé
+Basé sur les recherches récentes en trading algorithmique
+Améliorations pour performance sur infrastructure économique
+"""
+
+# Imports standards
+import logging
+# Suppression de l'import incorrect
+# from termios import IBSHIFT
+logger = logging.getLogger(__name__)
+import matplotlib
+matplotlib.use('Agg')  # Utiliser un backend non interactif
+import numpy as np # type: ignore
+import pandas as pd # type: ignore
+import time
+import logging
+import threading
+import queue
+from datetime import datetime, timedelta
+import subprocess
+import sys
+
+# Imports scientifiques
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingRegressor # type: ignore
+from sklearn.preprocessing import StandardScaler, RobustScaler # type: ignore
+from sklearn.model_selection import TimeSeriesSplit # type: ignore # type: ignore
+from sklearn.pipeline import Pipeline # type: ignore # type: ignore
+from scipy.optimize import minimize # type: ignore
+
+# Imports visualisation
+import matplotlib.pyplot as plt # type: ignore # type: ignore
+
+# Imports utilitaires
+import warnings
+import joblib # type: ignore # type: ignore
+from collections import deque
+
+# Imports IBKR
+from ibapi.client import EClient # type: ignore # type: ignore
+from ibapi.wrapper import EWrapper # type: ignore # type: ignore
+from ibapi.contract import Contract # type: ignore # type: ignore
+from ibapi.order import Order # type: ignore # type: ignore
+
+# Désactiver les avertissements
+warnings.filterwarnings('ignore')
+
+# Configuration du logging
+def setup_logging():
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler("trading_algorithm.log"),
+            logging.StreamHandler()
+        ]
+    )
+    return logging.getLogger(__name__)
+
+# Vérifier que IBKR est correctement installé
+try:
+    from ibapi.client import EClient # type: ignore
+except ImportError:
+    print("Installation de ibapi...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--index-url", "https://pip.pkg.github.com/InteractiveBrokers/ibapi"])
+
+# Ajouter le chemin du projet aux chemins Python
+import os
+import sys
+
+project_root = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(project_root)
+
+def init_config():
+    """Initialise la configuration de base"""
+    # Création du dossier de logs s'il n'existe pas
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
+    
+    # Configuration du logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler("logs/trading_algorithm.log"),
+            logging.StreamHandler()
+        ]
+    )
+    
+    # Vérification des packages
+    verify_packages()
+
+def verify_packages():
+    """Vérifie si les packages requis sont installés"""
+    import sys
+    import subprocess
+    
+    # Liste des packages requis
+    required_packages = [
+        "numpy>=1.21.0",
+        "pandas>=1.3.0",
+        "scikit-learn>=0.24.0",
+        "scipy>=1.7.0",
+        "matplotlib>=3.4.0",
+        "joblib>=1.0.0",
+        "ibapi>=9.81.1"
+    ]
+    
+    # Vérification et installation si nécessaire
+    for package in required_packages:
+        try:
+            package_name = package.split('>=')[0]
+            __import__(package_name)
+            logger.info(f"✓ {package} est installé")
+        except ImportError:
+            logger.warning(f"✗ {package} n'est pas installé")
+            logger.info(f"Installation de {package}...")
+            try:
+                subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+                logger.info(f"✓ {package} a été installé avec succès")
+            except Exception as e:
+                logger.error(f"✗ Erreur lors de l'installation de {package}: {str(e)}")
+
+class MarketImpactModel:
+    """
+    Modèle d'impact de marché optimisé basé sur les travaux de Bouchaud
+    Utilise une approche non-paramétrique pour estimer l'impact des ordres
+    """
+    
+    def __init__(self, use_cache=True):
+        self.model = Pipeline([
+            ('scaler', RobustScaler()),
+            ('regressor', GradientBoostingRegressor(
+                n_estimators=100,
+                max_depth=3,
+                learning_rate=0.1,
+                subsample=0.8,
+                random_state=42
+            ))
+        ])
+        self.is_trained = False
+        self.use_cache = use_cache
+        self.cache = {}
+        
+    def fit(self, X, y):
+        """Entraîne le modèle d'impact de marché"""
+        start_time = time.time()
+        self.model.fit(X, y)
+        self.is_trained = True
+        logger.info(f"Modèle d'impact de marché entraîné en {time.time() - start_time:.2f} secondes")
+        return self
+    
+    def predict(self, features):
+        """Prédit l'impact de marché pour des caractéristiques données"""
+        # Utiliser le cache si disponible pour des calculs fréquents
+        if self.use_cache:
+            features_tuple = tuple(map(float, features.flatten()))
+            if features_tuple in self.cache:
+                return self.cache[features_tuple]
+        
+        if not self.is_trained:
+            logger.warning("Le modèle d'impact n'est pas entraîné. Retour d'une valeur par défaut.")
+            return 0.001 * np.sqrt(features[0]) if features.size > 0 else 0.001
+        
+        impact = self.model.predict(features)
+        
+        # Mettre en cache le résultat
+        if self.use_cache:
+            self.cache[features_tuple] = impact
+            # Limiter la taille du cache
+            if len(self.cache) > 10000:
+                # Supprimer 20% des entrées les plus anciennes
+                keys_to_remove = list(self.cache.keys())[:2000]
+                for k in keys_to_remove:
+                    del self.cache[k]
+        
+        return impact
+
+class SignalGenerator:
+    """
+    Générateur de signaux optimisé
+    - Utilise une forêt aléatoire pour la robustesse
+    - Intègre une approche de méta-labélisation
+    - Optimisé pour des prédictions rapides
+    """
+    
+    def __init__(self, model_path=None):
+        self.model = RandomForestClassifier(
+            n_estimators=50,  # Réduit pour la performance
+            max_depth=4,
+            min_samples_leaf=100,
+            class_weight='balanced',
+            n_jobs=-1,  # Utilise tous les cœurs disponibles
+            random_state=42
+        )
+        self.scaler = RobustScaler()  # Plus robuste aux valeurs aberrantes
+        self.is_trained = False
+        self.feature_importance = None
+        self.model_path = model_path
+        self.top_features = None
+        
+    def load_model(self):
+        """Charge un modèle pré-entraîné"""
+        if self.model_path:
+            try:
+                loaded_model = joblib.load(self.model_path)
+                self.model = loaded_model['model']
+                self.scaler = loaded_model['scaler']
+                self.top_features = loaded_model['top_features']
+                self.is_trained = True
+                logger.info(f"Modèle chargé depuis {self.model_path}")
+                return True
+            except Exception as e:
+                logger.error(f"Erreur lors du chargement du modèle: {e}")
+        return False
+    
+    def save_model(self, path=None):
+        """Sauvegarde le modèle pour une utilisation future"""
+        if not path:
+            path = f"signal_model_{datetime.now().strftime('%Y%m%d')}.joblib"
+        
+        model_data = {
+            'model': self.model,
+            'scaler': self.scaler,
+            'top_features': self.top_features
+        }
+        
+        joblib.dump(model_data, path)
+        logger.info(f"Modèle sauvegardé à {path}")
+    
+    def train(self, X, y, feature_names=None):
+        """Entraîne le modèle de signal"""
+        start_time = time.time()
+        
+        # Normalisation des features
+        X_scaled = self.scaler.fit_transform(X)
+        
+        # Entraînement du modèle
+        self.model.fit(X_scaled, y)
+        
+        # Calcul de l'importance des features
+        if feature_names:
+            self.feature_importance = dict(zip(feature_names, self.model.feature_importances_))
+            # Sélectionner les 10 features les plus importantes
+            self.top_features = sorted(
+                self.feature_importance.items(), 
+                key=lambda x: x[1], 
+                reverse=True
+            )[:10]
+            logger.info("Top 10 features par importance: %s", 
+                      ", ".join([f"{name} ({importance:.4f})" for name, importance in self.top_features]))
+        
+        self.is_trained = True
+        logger.info(f"Modèle de signal entraîné en {time.time() - start_time:.2f} secondes")
+    
+    def predict(self, features, threshold=0.6):
+        """
+        Prédit le signal de trading optimal
+        - Retourne la direction et la confiance
+        - Applique un seuil de confiance minimum
+        """
+        if not self.is_trained:
+            logger.warning("Tentative de prédiction avec un modèle non entraîné")
+            return 0, 0
+        
+        # Normalisation des features
+        features_scaled = self.scaler.transform(features)
+        
+        # Prédiction de la classe
+        signal_class = self.model.predict(features_scaled)[0]
+        
+        # Calcul des probabilités pour la confiance
+        proba = self.model.predict_proba(features_scaled)[0]
+        confidence = proba[np.argmax(proba)]
+        
+        # Appliquer un seuil de confiance
+        if confidence < threshold:
+            return 0, confidence
+        
+        return signal_class, confidence
+
+class ExecutionOptimizer:
+    """
+    Optimiseur d'exécution basé sur le modèle Almgren-Chriss
+    Amélioré pour une performance plus rapide et adapté aux conditions de marché
+    """
+    
+    def __init__(self, risk_aversion=1.0, impact_model=None):
+        self.risk_aversion = risk_aversion
+        self.impact_model = impact_model or MarketImpactModel()
+        self.execution_cache = {}
+        
+    def optimal_execution_fast(self, total_shares, time_horizon, price, volatility, volume):
+        """
+        Version optimisée du calcul de la trajectoire d'exécution
+        Utilise un cache pour les calculs fréquents
+        """
+        # Arrondir les entrées pour améliorer l'utilisation du cache
+        cache_key = (
+            round(total_shares, -2),
+            time_horizon,
+            round(price, 2),
+            round(volatility, 4),
+            round(volume, -2)
+        )
+        
+        # Vérifier si le résultat est dans le cache
+        if cache_key in self.execution_cache:
+            return self.execution_cache[cache_key]
+        
+        # Calculer les paramètres de coût
+        volatility = max(volatility, 0.001)  # Éviter les valeurs nulles
+        volume = max(volume, 1)  # Éviter les divisions par zéro
+        
+        # Paramètres simplifiés pour l'optimisation
+        temp_impact = 0.1 * volatility / np.sqrt(volume)
+        perm_impact = temp_impact * 0.1
+        
+        # Calcul simplifié pour les petites quantités ou peu d'étapes
+        if total_shares < 100 or time_horizon <= 2:
+            # Répartir uniformément pour les petits ordres
+            execution_path = np.ones(time_horizon) * (total_shares / time_horizon)
+            self.execution_cache[cache_key] = execution_path
+            return execution_path
+        
+        # Approche analytique simplifiée (basée sur une approximation exponentielle)
+        decay_factor = np.exp(-self.risk_aversion * volatility**2 / (2 * temp_impact))
+        weights = decay_factor ** np.arange(time_horizon)
+        weights = weights / np.sum(weights)
+        execution_path = weights * total_shares
+        
+        # Sauvegarder le résultat dans le cache
+        self.execution_cache[cache_key] = execution_path
+        
+        # Nettoyer le cache si nécessaire
+        if len(self.execution_cache) > 1000:
+            # Supprimer 20% des entrées les plus anciennes
+            old_keys = list(self.execution_cache.keys())[:200]
+            for k in old_keys:
+                del self.execution_cache[k]
+        
+        return execution_path
+    
+    def estimate_market_impact(self, order_size, price, volatility, volume):
+        """Estime l'impact de marché pour un ordre"""
+        if self.impact_model.is_trained:
+            features = np.array([[order_size / volume, volatility, volume]]) 
+            return self.impact_model.predict(features)
+        else:
+            # Modèle simplifié si le modèle d'impact n'est pas entraîné
+            return 0.1 * (order_size / volume) * volatility * np.sqrt(price)
+
+class AdaptivePositionSizer:
+    """
+    Gestionnaire de taille de position adaptatif
+    Ajuste les positions en fonction de la volatilité et de la confiance du signal
+    """
+    
+    def __init__(self, base_position_size=0.1, max_position=0.5, 
+                 target_vol=0.01, vol_lookback=20):
+        self.base_position_size = base_position_size
+        self.max_position = max_position
+        self.target_vol = target_vol
+        self.vol_lookback = vol_lookback
+        
+    def calculate_position_size(self, signal, confidence, current_vol, 
+                               capital, price, existing_position=0):
+        """Calcule la taille de position optimale"""
+        # Pas de position si pas de signal
+        if signal == 0:
+            return 0
+        
+        # Facteur de volatilité (inversement proportionnel à la volatilité)
+        vol_factor = min(self.target_vol / max(current_vol, 0.001), 3.0)
+        
+        # Facteur de confiance du modèle
+        confidence_factor = (confidence - 0.5) * 2 if confidence > 0.5 else 0
+        
+        # Position de base ajustée
+        adjusted_position_size = (
+            self.base_position_size * 
+            vol_factor * 
+            confidence_factor * 
+            signal
+        )
+        
+        # Limiter la position totale
+        adjusted_position_size = np.clip(
+            adjusted_position_size, 
+            -self.max_position, 
+            self.max_position
+        )
+        
+        # Calculer le nombre d'unités à acheter/vendre
+        position_value = adjusted_position_size * capital
+        units = position_value / price
+        
+        # Ajustement pour les unités existantes
+        delta_units = units - existing_position
+        
+        return delta_units
+
+class MarketDataHandler:
+    """
+    Gestionnaire de données de marché optimisé
+    - Prétraitement des données dans un thread séparé
+    - Mise en cache des calculs fréquents
+    """
+    
+    def __init__(self, lookback_periods=100, feature_engineering_interval=60):  # Augmenté à 60 secondes
+        self.lookback_periods = lookback_periods
+        self.feature_engineering_interval = feature_engineering_interval
+        self.last_feature_calculation = 0
+        self.feature_cache = {}
+        self.data_buffer = deque(maxlen=lookback_periods + 10)
+        self.feature_queue = queue.Queue(maxsize=1)
+        self.processing_thread = None
+        self.running = False
+        self.lock = threading.Lock()  # Ajout d'un verrou pour la synchronisation
+        
+    def start_processing(self):
+        """Démarre le thread de traitement en arrière-plan"""
+        self.running = True
+        self.processing_thread = threading.Thread(
+            target=self._background_feature_engineering, 
+            daemon=True
+        )
+        self.processing_thread.start()
+        logger.info("Thread de traitement des données démarré")
+    
+    def stop_processing(self):
+        """Arrête le thread de traitement"""
+        self.running = False
+        if self.processing_thread:
+            self.processing_thread.join(timeout=2)
+        logger.info("Thread de traitement des données arrêté")
+    
+    def add_data_point(self, data_point):
+        """Ajoute un point de données au buffer"""
+        with self.lock:
+            self.data_buffer.append(data_point)
+    
+    def get_current_features(self, data=None, force_calculation=False):
+        """
+        Obtient les caractéristiques actuelles
+        Utilise le cache ou attend les résultats du thread de traitement
+        """
+        current_time = time.time()
+        
+        # Si nous avons des calculs récents en cache et que force_calculation est False
+        if (current_time - self.last_feature_calculation < self.feature_engineering_interval 
+            and not force_calculation
+            and self.feature_cache):
+            return self.feature_cache
+        
+        # Si un thread de traitement est en cours
+        if self.processing_thread and self.processing_thread.is_alive():
+            try:
+                # Essayer d'obtenir les résultats du thread (non bloquant)
+                features = self.feature_queue.get(block=False)
+                self.feature_cache = features
+                return features
+            except queue.Empty:
+                # Si pas de résultats disponibles, utiliser le cache existant
+                if self.feature_cache:
+                    return self.feature_cache
+        
+        # Si nous devons calculer maintenant (fallback)
+        if data is None:
+            with self.lock:
+                data = list(self.data_buffer)
+                if not data:
+                    logger.warning("Aucune donnée disponible pour le calcul des caractéristiques")
+                    return {}
+        
+        # Création d'un DataFrame à partir des données
+        df = pd.DataFrame(data)
+        features = self._calculate_features(df)
+        
+        self.feature_cache = features
+        self.last_feature_calculation = current_time
+        
+        return features
+    
+    def _background_feature_engineering(self):
+        """Processus d'arrière-plan pour le calcul des caractéristiques"""
+        while self.running:
+            try:
+                # Vérifier si nous avons besoin de recalculer
+                current_time = time.time()
+                if (current_time - self.last_feature_calculation >= self.feature_engineering_interval 
+                    or not self.feature_cache):
+                    
+                    with self.lock:
+                        data = list(self.data_buffer)
+                        if data:
+                            # Créer un DataFrame et calculer les caractéristiques
+                            df = pd.DataFrame(data)
+                            features = self._calculate_features(df)
+                            
+                            # Mettre à jour le cache et la file d'attente
+                            try:
+                                # Vider la file d'attente si pleine
+                                while not self.feature_queue.empty():
+                                    self.feature_queue.get_nowait()
+                                # Ajouter les nouvelles caractéristiques
+                                self.feature_queue.put(features, block=False)
+                            except queue.Full:
+                                pass
+                            
+                            self.last_feature_calculation = current_time
+                
+                # Attendre avant la prochaine vérification
+                time.sleep(5)  # Réduit à 5 secondes pour une meilleure réactivité
+                
+            except Exception as e:
+                logger.error(f"Erreur dans le thread de traitement : {str(e)}")
+                time.sleep(1)  # Attendre en cas d'erreur
+    
+    def _calculate_features(self, data):
+        """
+        Calcule les caractéristiques techniques et de microstructure
+        Version optimisée et parallélisée quand possible
+        """
+        start_time = time.time()
+        
+        # Vérifier que nous avons les colonnes nécessaires
+        required_columns = ['open', 'high', 'low', 'close', 'volume']
+        if not all(col in data.columns for col in required_columns):
+            missing = [col for col in required_columns if col not in data.columns]
+            logger.error(f"Données manquantes: {missing}")
+            return {}
+        
+        try:
+            # Caractéristiques techniques de base
+            features = {}
+            
+            # Utiliser numpy pour les calculs vectorisés
+            close_values = data['close'].values
+            volume_values = data['volume'].values
+            
+            # Calculs optimisés pour les caractéristiques essentielles
+            if len(close_values) > 1:
+                returns = np.diff(close_values) / close_values[:-1]
+                features['returns'] = returns[-1]
+                
+                # Volatilité (calcul optimisé)
+                vol_window = min(20, len(returns))
+                if vol_window > 1:
+                    features['volatility'] = np.std(returns[-vol_window:])
+                else:
+                    features['volatility'] = 0.01
+            else:
+                features['returns'] = 0
+                features['volatility'] = 0.01
+            
+            # Moyennes mobiles (calcul vectorisé)
+            if len(close_values) >= 5:
+                features['ma_5'] = np.mean(close_values[-5:])
+            else:
+                features['ma_5'] = close_values[-1] if len(close_values) > 0 else 0
+                
+            if len(close_values) >= 20:
+                features['ma_20'] = np.mean(close_values[-20:])
+            else:
+                features['ma_20'] = close_values[-1] if len(close_values) > 0 else 0
+            
+            # Ratio des moyennes mobiles
+            if features['ma_20'] != 0:
+                features['ma_ratio'] = features['ma_5'] / features['ma_20']
+            else:
+                features['ma_ratio'] = 1.0
+            
+            # Volume
+            if len(volume_values) >= 5:
+                features['volume_ma_5'] = np.mean(volume_values[-5:])
+            else:
+                features['volume_ma_5'] = volume_values[-1] if len(volume_values) > 0 else 1
+                
+            if features['volume_ma_5'] > 0 and len(volume_values) > 0:
+                features['volume_ratio'] = volume_values[-1] / features['volume_ma_5']
+            else:
+                features['volume_ratio'] = 1.0
+            
+            # Caractéristiques de microstructure simplifiées
+            if len(data) > 0:
+                last_row = data.iloc[-1]
+                if all(x in last_row for x in ['high', 'low', 'close']):
+                    features['price_impact'] = last_row['high'] - last_row['low']
+                    if last_row['close'] != 0:
+                        features['normalized_range'] = features['price_impact'] / last_row['close']
+                    else:
+                        features['normalized_range'] = 0
+                
+                if all(x in last_row for x in ['open', 'close']):
+                    if last_row['open'] != 0:
+                        features['close_to_open'] = last_row['close'] / last_row['open'] - 1
+                    else:
+                        features['close_to_open'] = 0
+            
+            logger.debug(f"Caractéristiques calculées en {time.time() - start_time:.4f} secondes")
+            return features
+            
+        except Exception as e:
+            logger.error(f"Erreur lors du calcul des caractéristiques : {str(e)}")
+            return {}
+
+class IBKRConnection(EWrapper, EClient):
+    """
+    Gestionnaire de connexion IBKR optimisé
+    - Reconnexion automatique
+    - Traitement asynchrone des requêtes
+    - Meilleures performances pour les données en temps réel
+    """
+    
+    def __init__(self, port=7496, clientId=1):
+        EClient.__init__(self, self)
+        self.port = port
+        self.clientId = clientId
+        self.connected = False
+        self.next_order_id = None
+        self.contract_details = {}
+        self.account_summary = {}
+        self.data = {}
+        self.logger = logging.getLogger('IBKRConnection')
+        self.connection_attempts = 0
+        self.max_attempts = 3
+        self.retry_delay = 5  # secondes
+        self.logger.info(f"Configuration de la connexion IBKR sur le port {port} (Paper Trading)")
+        
+    def connect(self):
+        """Établit la connexion à TWS avec mécanisme de retry"""
+        while self.connection_attempts < self.max_attempts:
+            try:
+                self.connection_attempts += 1
+                self.logger.info(f"Tentative de connexion {self.connection_attempts}/{self.max_attempts} à TWS...")
+                
+                # Connexion à TWS
+                super().connect('127.0.0.1', self.port, clientId=self.clientId)
+                
+                # Démarrer le thread de messages
+                thread = threading.Thread(target=self.run, daemon=True)
+                thread.start()
+                
+                # Attendre la connexion avec timeout
+                timeout = 30  # Augmenté à 30 secondes
+                start_time = time.time()
+                while self.next_order_id is None and time.time() - start_time < timeout:
+                    time.sleep(0.1)
+                
+                if self.next_order_id is not None:
+                    self.connected = True
+                    self.logger.info("✓ Connexion à TWS établie avec succès")
+                    return True
+                else:
+                    self.logger.error("✗ Échec de la connexion à TWS (timeout)")
+                    if self.connection_attempts < self.max_attempts:
+                        self.logger.info(f"Attente de {self.retry_delay} secondes avant la prochaine tentative...")
+                        time.sleep(self.retry_delay)
+                    continue
+                    
+            except Exception as e:
+                self.logger.error(f"Erreur lors de la connexion à TWS: {str(e)}")
+                if "Couldn't connect to TWS" in str(e):
+                    self.logger.error(f"""
+                    Vérifiez que :
+                    1. TWS est en cours d'exécution
+                    2. Le port {self.port} est correctement configuré dans TWS
+                    3. 'Enable ActiveX and Socket Clients' est coché
+                    4. 'Allow connections from localhost only' est coché
+                    5. '127.0.0.1' est dans la liste des IPs de confiance
+                    """)
+                if self.connection_attempts < self.max_attempts:
+                    self.logger.info(f"Attente de {self.retry_delay} secondes avant la prochaine tentative...")
+                    time.sleep(self.retry_delay)
+                continue
+        
+        self.logger.error("✗ Échec de la connexion après toutes les tentatives")
+        return False
+        
+    def nextValidId(self, orderId):
+        """Callback quand la connexion est établie"""
+        self.next_order_id = orderId
+        self.logger.info(f"Connexion établie, prochain ID d'ordre: {orderId}")
+        
+    def error(self, reqId, errorCode, errorString):
+        """Gestion des erreurs de l'API"""
+        self.logger.error(f"Erreur TWS: {reqId} / {errorCode} / {errorString}")
+        
+        # Messages d'erreur spécifiques
+        if errorCode == 502:
+            self.logger.error("✗ Port TWS incorrect")
+        elif errorCode == 501:
+            self.logger.error("✗ API non activée")
+        elif errorCode == 1100:
+            self.logger.error("✗ Connexion perdue")
+        
+    def connectionClosed(self):
+        """Callback quand la connexion est fermée"""
+        self.connected = False
+        self.logger.error("Connexion à TWS fermée")
+        
+    def is_connected(self):
+        """Vérifie si la connexion est active"""
+        return self.connected and super().isConnected()
+        
+    def disconnect(self):
+        """Déconnexion de TWS"""
+        if self.is_connected():
+            try:
+                super().disconnect()
+                self.connected = False
+                self.logger.info("Déconnexion de TWS effectuée")
+            except Exception as e:
+                self.logger.error(f"Erreur lors de la déconnexion: {str(e)}")
+                
+    def contractDetails(self, reqId, contractDetails):
+        """Callback pour les détails de contrat"""
+        super().contractDetails(reqId, contractDetails)
+        if reqId not in self.contract_details:
+            self.contract_details[reqId] = []
+        self.contract_details[reqId].append(contractDetails)
+        
+    def contractDetailsEnd(self, reqId):
+        """Callback fin des détails de contrat"""
+        super().contractDetailsEnd(reqId)
+        self.logger.info(f"Détails de contrat reçus pour reqId {reqId}")
+        
+    def accountSummary(self, reqId, account, tag, value, currency):
+        """Callback pour le résumé de compte"""
+        super().accountSummary(reqId, account, tag, value, currency)
+        if tag not in self.account_summary:
+            self.account_summary[tag] = {}
+        self.account_summary[tag]['value'] = value
+        self.account_summary[tag]['currency'] = currency
+        
+    def accountSummaryEnd(self, reqId):
+        """Callback fin du résumé de compte"""
+        super().accountSummaryEnd(reqId)
+        self.logger.info("Résumé du compte reçu")
+        
+    def historicalData(self, reqId, bar):
+        """Callback pour les données historiques"""
+        if reqId not in self.data:
+            self.data[reqId] = []
+        self.data[reqId].append({
+            'date': bar.date,
+            'open': bar.open,
+            'high': bar.high,
+            'low': bar.low,
+            'close': bar.close,
+            'volume': bar.volume
+        })
+        
+    def historicalDataEnd(self, reqId, start, end):
+        """Callback fin des données historiques"""
+        self.logger.info(f"Données historiques reçues pour reqId {reqId}: {len(self.data[reqId])} barres")
+        
+    def get_contract(self, symbol, secType="STK", exchange="SMART", currency="USD"):
+        """Crée un contrat pour un symbole donné"""
+        contract = Contract()
+        contract.symbol = symbol
+        contract.secType = secType
+        contract.exchange = exchange
+        contract.currency = currency
+        return contract
+
+class IBKRDataFeed:
+    """
+    Gestionnaire de flux de données IBKR
+    Utilise la classe IBKRConnection pour récupérer les données
+    """
+    def __init__(self):
+        logger.info("Initialisation du flux de données IBKR...")
+        self.ibkr = IBKRConnection(port=7497, clientId=1)  # Utiliser le port 7497 pour Paper Trading
+        logger.info(f"Tentative de connexion au port {self.ibkr.port} (Paper Trading)...")
+        
+        # Tentative de connexion avec retry
+        max_retries = 3
+        retry_delay = 2
+        for attempt in range(max_retries):
+            try:
+                if self.ibkr.connect():
+                    logger.info("Connexion IBKR établie avec succès")
+                    break
+                else:
+                    logger.warning(f"Tentative de connexion {attempt + 1}/{max_retries} échouée")
+                    if attempt < max_retries - 1:
+                        logger.info(f"Attente de {retry_delay} secondes avant la prochaine tentative...")
+                        time.sleep(retry_delay)
+            except Exception as e:
+                logger.error(f"Erreur lors de la tentative de connexion {attempt + 1}: {str(e)}")
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+        
+        if not self.ibkr.is_connected():
+            logger.error("Échec de la connexion après toutes les tentatives")
+            logger.error("""
+            Vérifiez que :
+            1. TWS est en cours d'exécution
+            2. Le port 7497 est correctement configuré dans TWS
+            3. 'Enable ActiveX and Socket Clients' est coché
+            4. 'Allow connections from localhost only' est coché
+            5. '127.0.0.1' est dans la liste des IPs de confiance
+            6. Redémarrez TWS après avoir modifié ces paramètres
+            """)
+            raise ConnectionError("Impossible de se connecter à TWS. Veuillez vérifier que TWS est en cours d'exécution et que l'API est correctement configurée.")
+    
+    def is_connected(self):
+        """Vérifie si la connexion à TWS est active"""
+        return self.ibkr.is_connected()
+        
+    def disconnect(self):
+        """Déconnexion de TWS"""
+        self.ibkr.disconnect()
+        
+    def get_historical_data(self, symbol, duration='1 D', bar_size='1 min'):
+        """Récupère les données historiques"""
+        logger.info(f"Récupération des données historiques pour {symbol}...")
+        try:
+            contract = self.ibkr.get_contract(symbol)
+            logger.info(f"Contrat créé pour {symbol}")
+            
+            # Nettoyer les données précédentes
+            if 1 in self.ibkr.data:
+                del self.ibkr.data[1]
+            logger.info("Données précédentes nettoyées")
+            
+            # Requête des données historiques
+            logger.info(f"Envoi de la requête pour {symbol} (durée: {duration}, taille: {bar_size})")
+            self.ibkr.reqHistoricalData(
+                reqId=1,
+                contract=contract,
+                endDateTime='',
+                durationStr=duration,
+                barSizeSetting=bar_size,
+                whatToShow='TRADES',
+                useRTH=1,
+                formatDate=1,
+                keepUpToDate=False,
+                chartOptions=[]
+            )
+            
+            # Attendre les données avec timeout
+            timeout = 5
+            start_time = time.time()
+            logger.info("Attente des données...")
+            while 1 not in self.ibkr.data and time.time() - start_time < timeout:
+                time.sleep(0.1)
+            
+            if 1 not in self.ibkr.data or not self.ibkr.data[1]:
+                logger.error(f"Aucune donnée reçue pour {symbol} après {timeout} secondes")
+                return pd.DataFrame()
+            
+            logger.info(f"Données reçues pour {symbol}: {len(self.ibkr.data[1])} points")
+            return pd.DataFrame(self.ibkr.data[1])
+            
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des données pour {symbol}: {str(e)}")
+            logger.error("Traceback complet :", exc_info=True)
+            return pd.DataFrame()
+
+class QuantTradingAlgorithm:
+    """
+    Algorithme de trading quantitatif optimisé
+    - Performances améliorées pour infrastructure économique
+    - Gestion avancée des risques et de la volatilité
+    - Compatible avec API de broker
+    """
+    
+    def __init__(self, 
+                 risk_aversion=1.0, 
+                 initial_capital=100000,
+                 model_path=None,
+                 broker_api=None):
+        
+        self.risk_aversion = risk_aversion
+        self.capital = initial_capital
+        self.position = 0
+        self.trades = []
+        self.portfolio_values = [initial_capital]
+        self.performance_metrics = {}
+        self.last_signal_time = None
+        self.signal_cooldown = 60  # Temps en secondes entre les générations de signaux
+        
+        # Composants principaux
+        self.data_handler = MarketDataHandler()
+        self.impact_model = MarketImpactModel()
+        self.signal_generator = SignalGenerator(model_path)
+        self.execution_optimizer = ExecutionOptimizer(risk_aversion, self.impact_model)
+        self.position_sizer = AdaptivePositionSizer()
+        
+        # Broker API
+        self.broker_api = broker_api
+        
+        # Chargement du modèle s'il existe
+        if model_path:
+            self.signal_generator.load_model()
+        
+        # Initialisation du gestionnaire de données
+        self.data_handler.start_processing()
+        
+        # Initialisation de la connexion IBKR
+        self.ibkr_feed = IBKRDataFeed()
+        self.current_positions = {}
+        
+        logger.info("Algorithme de trading initialisé")
+    
+    def preprocess_data(self, data):
+        """
+        Prétraite les données pour l'entraînement et le backtesting
+        Version optimisée pour la performance
+        """
+        logger.info("Prétraitement des données...")
+        start_time = time.time()
+        
+        # Création d'un nouveau DataFrame pour éviter les warnings SettingWithCopyWarning
+        processed_data = data.copy()
+        
+        # Calcul des rendements et de la volatilité
+        processed_data['returns'] = processed_data['close'].pct_change()
+        
+        # Utilisation de numpy pour accélérer le calcul de la volatilité
+        close_values = processed_data['close'].values
+        returns = np.diff(close_values) / close_values[:-1]
+        volatility = pd.Series(returns).rolling(window=20).std()
+        
+        processed_data['volatility'] = volatility
+        
+        # Calcul vectorisé des moyennes mobiles
+        processed_data['ma_5'] = processed_data['close'].rolling(window=5, min_periods=1).mean()
+        processed_data['ma_20'] = processed_data['close'].rolling(window=20, min_periods=1).mean()
+        processed_data['ma_ratio'] = processed_data['ma_5'] / processed_data['ma_20']
+        
+        # Caractéristiques de volume
+        processed_data['volume_ma_5'] = processed_data['volume'].rolling(window=5, min_periods=1).mean()
+        processed_data['volume_ratio'] = processed_data['volume'] / processed_data['volume_ma_5']
+        
+        # Caractéristiques de microstructure
+        processed_data['price_impact'] = processed_data['high'] - processed_data['low']
+        processed_data['normalized_range'] = processed_data['price_impact'] / processed_data['close']
+        processed_data['close_to_open'] = processed_data['close'] / processed_data['open'] - 1
+        
+        # Nettoyage des valeurs NaN
+        processed_data = processed_data.dropna()
+        
+        logger.info(f"Prétraitement terminé en {time.time() - start_time:.2f} secondes")
+        return processed_data
+    
+    def create_labels(self, data, horizon=5, threshold=0.005):
+        """
+        Crée des labels pour l'entraînement supervisé
+        Utilise la technique de méta-labélisation optimisée
+        """
+        logger.info(f"Création des labels avec horizon={horizon}, threshold={threshold}...")
+        start_time = time.time()
+        
+        labeled_data = data.copy()
+        
+        # Calcul des rendements futurs (vectorisé)
+        labeled_data['forward_returns'] = labeled_data['close'].pct_change(horizon).shift(-horizon)
+        
+        # Direction (vectorisée)
+        labeled_data['direction'] = np.sign(labeled_data['forward_returns'])
+        
+        # Méta-label avec seuil de rentabilité (vectorisé)
+        labeled_data['volatility_adjusted_return'] = labeled_data['forward_returns'] / labeled_data['volatility']
+        labeled_data['meta_label'] = np.where(
+            abs(labeled_data['volatility_adjusted_return']) > threshold, 
+            labeled_data['direction'], 
+            0
+        )
+        
+        # Purger les NaN
+        labeled_data = labeled_data.dropna()
+        
+        logger.info(f"Création des labels terminée en {time.time() - start_time:.2f} secondes")
+        logger.info(f"Distribution des labels: {labeled_data['meta_label'].value_counts().to_dict()}")
+        
+        return labeled_data
+    
+    def train_models(self, data, save_path=None):
+        """
+        Entraîne les modèles de signal et d'impact de marché
+        Version optimisée pour réduire le temps d'entraînement
+        """
+        logger.info("Début de l'entraînement des modèles...")
+        start_time = time.time()
+        
+        # Caractéristiques pour le modèle de signal
+        features = [
+            'returns', 'volatility', 'ma_ratio', 'volume_ratio',
+            'price_impact', 'normalized_range', 'close_to_open'
+        ]
+        
+        # Préparation des données
+        X = data[features].values
+        y = data['meta_label'].values
+        
+        # Entraînement du modèle de signal
+        self.signal_generator.train(X, y, feature_names=features)
+        
+        # Simulation des données d'impact de marché si non disponibles
+        simulated_volumes = np.random.uniform(0.01, 0.1, len(data)) * data['volume']
+        simulated_impact = 0.1 * np.sqrt(simulated_volumes / data['volume']) * data['volatility']
+        
+        execution_data = pd.DataFrame({
+            'order_size_pct': simulated_volumes / data['volume'],
+            'volatility': data['volatility'],
+            'volume': data['volume'],
+            'impact': simulated_impact
+        })
+        
+        # Préparation des données pour le modèle d'impact
+        X_impact = execution_data[['order_size_pct', 'volatility', 'volume']].values
+        y_impact = execution_data['impact'].values
+        
+        # Entraînement du modèle d'impact
+        self.impact_model.fit(X_impact, y_impact)
+        
+        # Sauvegarder le modèle si demandé
+        if save_path:
+            self.signal_generator.save_model(save_path)
+        
+        logger.info(f"Entraînement des modèles terminé en {time.time() - start_time:.2f} secondes")
+    
+    def generate_trading_signal(self, market_data, min_confidence=0.6):
+        """
+        Génère un signal de trading basé sur les données actuelles du marché
+        """
+        current_time = time.time()
+        
+        # Vérifier le temps écoulé depuis le dernier signal
+        if (self.last_signal_time is not None and 
+            current_time - self.last_signal_time < self.signal_cooldown):
+            logger.debug("Période de refroidissement des signaux en cours")
+            return 0, 0  # Pas de signal pendant la période de refroidissement
+        
+        # Obtenir les caractéristiques à partir du gestionnaire de données
+        if isinstance(market_data, dict):
+            features = market_data
+        else:
+            # Ajouter les données au gestionnaire
+            for row in market_data.itertuples():
+                self.data_handler.add_data_point(row._asdict())
+            
+            # Obtenir les caractéristiques
+            features = self.data_handler.get_current_features(force_calculation=True)
+        
+        if not features:
+            logger.warning("Impossible de générer des caractéristiques")
+            return 0, 0
+        
+        # Construire le vecteur de caractéristiques dans le bon ordre
+        required_features = [
+            'returns', 'volatility', 'ma_ratio', 'volume_ratio',
+            'price_impact', 'normalized_range', 'close_to_open'
+        ]
+        
+        # Vérifier si toutes les caractéristiques sont disponibles
+        if not all(f in features for f in required_features):
+            missing = [f for f in required_features if f not in features]
+            logger.warning(f"Caractéristiques manquantes pour la génération de signal: {missing}")
+            return 0, 0
+        
+        feature_vector = np.array([[features[f] for f in required_features]])
+        
+        # Générer le signal
+        signal, confidence = self.signal_generator.predict(feature_vector, threshold=min_confidence)
+        
+        # Mettre à jour le temps du dernier signal
+        self.last_signal_time = current_time
+        
+        logger.info(f"Signal généré: {signal}, confiance: {confidence:.4f}")
+
+    def execute_trade(self, symbol, quantity, action):
+        """Exécute un trade via IBKR"""
+        try:
+            logger.info(f"Préparation de l'ordre {action} pour {symbol}...")
+            contract = self.ibkr_feed.get_contract(symbol)
+            
+            # Création de l'ordre
+            order = Order()
+            order.action = action
+            order.totalQuantity = abs(quantity)
+            order.orderType = "MKT"  # Ordre au marché
+            order.tif = "DAY"  # Valable pour la journée
+            
+            logger.info(f"Envoi de l'ordre: {action} {abs(quantity)} {symbol}")
+            self.ibkr_feed.client.placeOrder(
+                self.ibkr_feed.client.next_order_id,
+                contract,
+                order
+            )
+            logger.info("Ordre envoyé avec succès")
+            
+        except Exception as e:
+            logger.error(f"Erreur lors de l'exécution du trade : {str(e)}")
+            logger.error("Traceback complet :", exc_info=True)
+            
+    def run_live_trading(self, symbols, interval='1 min'):
+        """
+        Exécute l'algorithme en trading live avec IBKR
+        """
+        logger.info("Démarrage du trading live avec IBKR...")
+        
+        # Vérification initiale de la connexion
+        if not self.ibkr_feed.is_connected():
+            logger.error("Pas de connexion à TWS. Tentative de reconnexion...")
+            if not self.ibkr_feed.connect():
+                logger.error("Échec de la connexion à TWS. Veuillez vérifier que TWS est en cours d'exécution.")
+                return
+            
+        logger.info("Connexion TWS établie")
+        
+        # Vérification des permissions de trading
+        logger.info("Vérification des permissions de trading...")
+        permissions = verify_trading_permissions(self.ibkr_feed.client)
+        if not any(permissions.values()):
+            logger.error("Permissions de trading insuffisantes")
+            return
+            
+        logger.info("Permissions de trading vérifiées")
+        
+        # Vérification du compte
+        logger.info("Vérification du statut du compte...")
+        if not verify_account_status(self.ibkr_feed.client):
+            logger.error("Impossible de vérifier le statut du compte")
+            return
+        
+        logger.info("Compte vérifié avec succès")
+        
+        # Initialisation des positions
+        self.current_positions = {symbol: 0 for symbol in symbols}
+        logger.info(f"Positions initialisées pour les symboles: {symbols}")
+        
+        iteration_count = 0
+        # Boucle principale de trading
+        while True:
+            try:
+                iteration_count += 1
+                logger.info(f"\n=== Itération {iteration_count} ===")
+                
+                for symbol in symbols:
+                    logger.info(f"\nTraitement du symbole {symbol}...")
+                    
+                    # Vérification de la connexion avant chaque itération
+                    if not self.ibkr_feed.is_connected():
+                        logger.error("Connexion TWS perdue. Tentative de reconnexion...")
+                        if not self.ibkr_feed.connect():
+                            logger.error("Échec de la reconnexion")
+                            time.sleep(60)
+                            continue
+                        
+                    # Récupération des données récentes
+                    logger.info("Récupération des données historiques...")
+                    market_data = self.ibkr_feed.get_historical_data(
+                        symbol,
+                        duration='1 D',
+                        bar_size=interval
+                    )
+                    
+                    if market_data.empty:
+                        logger.warning(f"Aucune donnée reçue pour {symbol}")
+                        continue
+                        
+                    logger.info(f"Données reçues pour {symbol}: {len(market_data)} points")
+                    logger.info(f"Dernière donnée: {market_data.iloc[-1]}")
+                    
+                    # Vérification de la qualité des données
+                    if market_data['close'].isnull().any() or market_data['volume'].isnull().any():
+                        logger.warning("Données incomplètes reçues")
+                        continue
+                    
+                    # Mise à jour des données
+                    logger.info("Mise à jour du gestionnaire de données...")
+                    self.data_handler.add_data_point(market_data.iloc[-1].to_dict())
+                    
+                    # Génération du signal
+                    logger.info("Génération du signal de trading...")
+                    features = self.data_handler.get_current_features()
+                    if not features:
+                        logger.warning("Aucune caractéristique disponible")
+                        continue
+                        
+                    signal, confidence = self.generate_trading_signal(features)
+                    logger.info(f"Signal généré: {signal}, confiance: {confidence:.4f}")
+                    
+                    if abs(signal) > 0 and confidence > 0.6:
+                        logger.info("Signal valide détecté, calcul de la taille de position...")
+                        # Calcul de la taille de position
+                        current_price = market_data.iloc[-1]['close']
+                        position_size = self.position_sizer.calculate_position_size(
+                            signal,
+                            confidence,
+                            market_data['close'].std(),
+                            self.capital,
+                            current_price,
+                            self.current_positions.get(symbol, 0)
+                        )
+                        
+                        if abs(position_size) > 0:
+                            action = 'BUY' if position_size > 0 else 'SELL'
+                            logger.info(f"Exécution de l'ordre: {action} {abs(position_size)} {symbol}")
+                            self.execute_trade(symbol, position_size, action)
+                            self.current_positions[symbol] = position_size
+                            logger.info(f"Nouvelle position pour {symbol}: {position_size}")
+                        else:
+                            logger.info("Taille de position nulle, pas d'ordre généré")
+                    else:
+                        logger.info("Pas de signal valide ou confiance insuffisante")
+                
+                logger.info(f"Fin de l'itération {iteration_count}")
+                logger.info("Attente avant la prochaine itération...")
+                time.sleep(60)  # Attendre 1 minute
+                
+            except KeyboardInterrupt:
+                logger.info("Arrêt manuel de l'algorithme...")
+                break
+            except Exception as e:
+                logger.error(f"Erreur dans la boucle de trading : {str(e)}")
+                logger.error("Traceback complet :", exc_info=True)
+                time.sleep(60)  # Attendre avant de réessayer
+
+def verify_trading_permissions(ibkr_connection):
+    """Vérifie les autorisations de trading"""
+    logger.info("Vérification détaillée des autorisations de trading...")
+    
+    test_symbols = ['AAPL', 'GOOGL', 'MSFT']
+    results = {}
+    error_messages = []
+    
+    for symbol in test_symbols:
+        try:
+            logger.info(f"Vérification des permissions pour {symbol}...")
+            contract = Contract()
+            contract.symbol = symbol
+            contract.secType = "STK"
+            contract.exchange = "SMART"
+            contract.currency = "USD"
+            
+            # Nettoyer les données précédentes
+            if symbol in ibkr_connection.contract_details:
+                del ibkr_connection.contract_details[symbol]
+            
+            # Requête des détails du contrat
+            ibkr_connection.reqContractDetails(
+                reqId=1,  # ID unique pour chaque requête
+                contract=contract
+            )
+            
+            # Attendre la réponse avec timeout
+            timeout = 5
+            start_time = time.time()
+            while symbol not in ibkr_connection.contract_details and time.time() - start_time < timeout:
+                time.sleep(0.1)
+            
+            # Vérifier si nous avons reçu des données
+            if symbol in ibkr_connection.contract_details:
+                logger.info(f"✓ {symbol}: Autorisations OK")
+                results[symbol] = True
+            else:
+                logger.warning(f"✗ {symbol}: Pas d'autorisations ou timeout")
+                results[symbol] = False
+                error_messages.append(f"Timeout pour {symbol}")
+                
+        except Exception as e:
+            logger.error(f"✗ Erreur pour {symbol}: {str(e)}")
+            results[symbol] = False
+            error_messages.append(f"Erreur pour {symbol}: {str(e)}")
+    
+    # Afficher un résumé des résultats
+    if all(results.values()):
+        logger.info("✓ Toutes les permissions de trading sont validées")
+        return results
+    else:
+        logger.error("✗ Problèmes de permissions détectés:")
+        for symbol, status in results.items():
+            if not status:
+                logger.error(f"- {symbol}: Non autorisé")
+        if error_messages:
+            logger.error("Messages d'erreur détaillés:")
+            for msg in error_messages:
+                logger.error(f"- {msg}")
+        return results
+
+def verify_account_status(ibkr_connection):
+    """Vérifie le statut du compte"""
+    logger.info("Vérification du statut du compte...")
+    
+    try:
+        # Nettoyer les données précédentes
+        ibkr_connection.account_summary.clear()
+        
+        # Requête des informations du compte
+        ibkr_connection.reqAccountSummary(
+            reqId=1,
+            groupName="All",
+            tags="NetLiquidation,AvailableFunds,BuyingPower,TotalCashValue"
+        )
+        
+        # Attendre les données
+        timeout = 5
+        start_time = time.time()
+        while len(ibkr_connection.account_summary) < 4 and time.time() - start_time < timeout:
+            time.sleep(0.1)
+            
+        if not ibkr_connection.account_summary:
+            logger.error("Aucune donnée de compte reçue")
+            return False
+            
+        # Afficher les informations
+        logger.info("\nStatut du compte :")
+        for tag, data in ibkr_connection.account_summary.items():
+            logger.info(f"{tag}: {data['value']} {data['currency']}")
+            
+        return True
+        
+    except Exception as e:
+        logger.error(f"Erreur lors de la vérification du compte : {str(e)}")
+        return False
+
+def verify_tws_running():
+    """Vérifie si TWS est en cours d'exécution et accessible"""
+    logger.info("\nVérification de TWS/Gateway :")
+    logger.info("-----------------------------")
+    
+    # Vérifier si TWS est en cours d'exécution
+    tws_process_found = check_tws_process()
+    if tws_process_found:
+        logger.info(f"✓ Processus TWS détecté")
+    else:
+        logger.error(f"✗ Le processus TWS n'est pas en cours d'exécution")
+        return False
+    
+    # Vérifier si les ports sont accessibles
+    tws_ports = {
+        "TWS Live (Port 7496)": 7496,
+        "TWS Paper (Port 7497)": 7497,
+        "Gateway Live (Port 4001)": 4001,
+        "Gateway Paper (Port 4002)": 4002,
+    }
+    
+    any_port_available = False
+    
+    for name, port in tws_ports.items():
+        if check_port_availability(port):
+            logger.info(f"{name}: ✓ En cours d'exécution")
+            any_port_available = True
+        else:
+            logger.info(f"{name}: ✗ Non disponible")
+    
+    if any_port_available:
+        logger.info("✓ Au moins un port TWS est disponible")
+        return True
+    else:
+        logger.error("✗ Aucun port TWS n'est accessible")
+        return False
+
+def check_port_availability(port):
+    """Vérifie si un port est accessible"""
+    import socket
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(1)  # Timeout de 1 seconde
+        result = sock.connect_ex(('127.0.0.1', port))
+        sock.close()
+        return result == 0
+    except Exception as e:
+        logger.error(f"Erreur lors de la vérification du port {port}: {str(e)}")
+        return False
+
+def check_tws_process():
+    """Vérifie si le processus TWS est en cours d'exécution"""
+    try:
+        import psutil
+        for proc in psutil.process_iter(['name', 'cmdline']):
+            try:
+                process_name = proc.info['name'].lower()
+                cmdline = proc.info['cmdline']
+                if cmdline and any('trader workstation' in cmd.lower() for cmd in cmdline if cmd):
+                    logger.info(f"Processus TWS trouvé: PID {proc.pid}")
+                    return True
+                if 'tws' in process_name or 'trader' in process_name:
+                    logger.info(f"Processus TWS trouvé: PID {proc.pid}")
+                    return True
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                continue
+        
+        # Fallback: chercher via ps (pour macOS/Linux)
+        import os
+        for proc in os.popen('ps aux | grep -i "trader workstation"').readlines():
+            if 'trader workstation' in proc.lower() and 'grep' not in proc.lower():
+                logger.info(f"Processus TWS trouvé: {proc.strip()}")
+                return True
+        
+        return False
+    except Exception as e:
+        logger.error(f"Erreur lors de la vérification du processus TWS: {str(e)}")
+        # Fallback basique si psutil n'est pas disponible
+        try:
+            import os
+            for proc in os.popen('ps aux | grep -i "trader workstation"').readlines():
+                if 'trader workstation' in proc.lower() and 'grep' not in proc.lower():
+                    logger.info(f"Processus TWS trouvé: {proc.strip()}")
+                    return True
+            return False
+        except:
+            logger.error("Impossible de vérifier le processus TWS")
+            return False
+
+def verify_tws_api_config():
+    """Vérifie la configuration de l'API TWS"""
+    logger.info("Vérification détaillée de la configuration TWS API...")
+    
+    # Vérifier d'abord si TWS est en cours d'exécution
+    if not verify_tws_running():
+        logger.error("TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.")
+        return False
+    
+    # Tentative de connexion à TWS (avec un timeout court)
+    logger.info("Tentative de connexion à TWS...")
+    
+    class QuickConnectionTest(EWrapper, EClient):
+        def __init__(self):
+            EClient.__init__(self, self)
+            self.connection_successful = False
+            self.error_messages = []
+            
+        def nextValidId(self, orderId):
+            self.connection_successful = True
+            logger.info(f"✓ Connexion établie avec l'ID d'ordre: {orderId}")
+            
+        def error(self, reqId, errorCode, errorString):
+            self.error_messages.append((errorCode, errorString))
+            if errorCode == 502:
+                logger.error("✗ Le port TWS n'est pas configuré correctement")
+                logger.error("Veuillez vérifier que le port 7497 est configuré dans TWS > Global Configuration > API")
+            elif errorCode == 501:
+                logger.error("✗ L'API TWS n'est pas activée")
+                logger.error("Veuillez activer 'Enable ActiveX and Socket Clients' dans TWS > Global Configuration > API")
+            elif errorCode == 507:
+                logger.error("✗ TWS API bloquée par le pare-feu")
+                logger.error("Veuillez vérifier les paramètres de votre pare-feu")
+            elif errorCode == 1100:
+                logger.error("✗ Connexion perdue")
+                logger.error("Veuillez vérifier que TWS est en cours d'exécution et que le port est correct")
+            logger.info(f"Message d'erreur: {errorString}")
+    
+    # Utiliser le port 7497 pour Paper Trading
+    port = 7497
+    test = QuickConnectionTest()
+    
+    try:
+        logger.info(f"Tentative de connexion sur le port {port}...")
+        test.connect('127.0.0.1', port, clientId=999)
+        test.run()
+        
+        # Attendre 10 secondes maximum pour la connexion
+        timeout = 10
+        start_time = time.time()
+        while not test.connection_successful and time.time() - start_time < timeout:
+            time.sleep(0.1)
+            
+        if test.connection_successful:
+            test.disconnect()
+            logger.info("✓ Connexion réussie à TWS API")
+            return True
+        else:
+            test.disconnect()
+            if test.error_messages:
+                logger.error("✗ Échec de la connexion à TWS avec les erreurs suivantes:")
+                for code, msg in test.error_messages:
+                    logger.error(f"Code {code}: {msg}")
+            else:
+                logger.error("✗ Échec de la connexion à TWS (timeout)")
+            return False
+            
+    except Exception as e:
+        logger.error(f"✗ Échec de la configuration TWS API")
+        logger.error(f"Erreur détaillée: {str(e)}")
+        return False
+
+def show_tws_setup_guide():
+    """Affiche le guide de configuration TWS"""
+    guide = """
+    Guide de Configuration TWS
+    ========================
+    
+    1. Ouvrir TWS (Trader Workstation)
+    ---------------------------------
+    - Lancez TWS
+    - Connectez-vous à votre compte (Paper Trading pour les tests)
+    
+    2. Configurer l'API
+    ------------------
+    - Allez dans File > Global Configuration (Alt+G)
+    - Sélectionnez 'API' dans le menu de gauche
+    - Cochez 'Enable ActiveX and Socket Clients'
+    - Définissez 'Socket port' sur 7497 (Paper Trading)
+    - Cochez 'Read-Only API' pour les tests initiaux
+    
+    3. Configurer les Permissions
+    ---------------------------
+    - Dans 'API Settings':
+        • Cochez 'Allow connections from localhost only'
+        • Ajoutez '127.0.0.1' dans 'Trusted IP Addresses'
+    
+    4. Vérifier les Autorisations
+    ---------------------------
+    - Dans 'Precautions':
+        • Configurez les limites de taille d'ordre
+        • Activez les confirmations pour les ordres si souhaité
+    """
+    print(guide)
+
+def main():
+    try:
+        # Configuration du logging
+        logger = setup_logging()
+        logger.info("Démarrage de l'algorithme de trading...")
+        logger.info("Version Python : " + sys.version)
+        logger.info("Répertoire de travail : " + os.getcwd())
+
+        # Vérification des packages
+        logger.info("Vérification des packages...")
+        verify_packages()
+
+        # Vérification de TWS avec plus de détails
+        logger.info("Vérification détaillée de la configuration TWS...")
+        tws_status = verify_tws_running()
+        if not tws_status:
+            logger.error("TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.")
+            show_tws_setup_guide()
+            sys.exit(1)
+        else:
+            logger.info("TWS est en cours d'exécution et accessible")
+
+        # Vérification de la configuration API avec plus de détails
+        logger.info("Vérification détaillée de la configuration API...")
+        api_status = verify_tws_api_config()
+        if not api_status:
+            logger.error("Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.")
+            show_tws_setup_guide()
+            sys.exit(1)
+        else:
+            logger.info("Configuration API validée")
+
+        # Initialisation de l'algorithme avec plus de détails
+        logger.info("Initialisation détaillée de l'algorithme de trading...")
+        try:
+            algo = QuantTradingAlgorithm(
+                risk_aversion=1.0,  # Paramètre de risque conservateur
+                initial_capital=100000,  # Capital initial
+                model_path=None  # Pas de modèle pré-entraîné pour commencer
+            )
+            logger.info("Algorithme initialisé avec succès")
+        except Exception as e:
+            logger.error(f"Erreur lors de l'initialisation de l'algorithme : {str(e)}")
+            logger.error("Traceback complet :", exc_info=True)
+            sys.exit(1)
+
+        # Vérification détaillée de la connexion IBKR
+        logger.info("Vérification détaillée de la connexion IBKR...")
+        if not algo.ibkr_feed.is_connected():
+            logger.error("Échec de la connexion à IBKR - Tentative de reconnexion...")
+            time.sleep(2)  # Attendre un peu avant de réessayer
+            if not algo.ibkr_feed.connect():
+                logger.error("La reconnexion a échoué. Veuillez vérifier TWS et réessayer.")
+                sys.exit(1)
+        else:
+            logger.info("Connexion IBKR établie avec succès")
+
+        # Liste des symboles à trader (commencez avec un seul pour tester)
+        symbols = ['AAPL']  # Apple pour le test
+        logger.info(f"Symboles à trader : {symbols}")
+
+        # Vérification du compte
+        logger.info("Vérification du statut du compte...")
+        if not verify_account_status(algo.ibkr_feed.client):
+            logger.error("Impossible de vérifier le statut du compte")
+            sys.exit(1)
+
+        # Démarrage du trading en mode paper trading
+        logger.info("Démarrage du trading en mode simulation...")
+        try:
+            algo.run_live_trading(symbols, interval='1 min')
+        except KeyboardInterrupt:
+            logger.info("Arrêt manuel de l'algorithme...")
+        except Exception as e:
+            logger.error(f"Erreur lors de l'exécution du trading : {str(e)}")
+            logger.error("Traceback complet :", exc_info=True)
+            raise
+
+    except KeyboardInterrupt:
+        logger.info("Arrêt manuel de l'algorithme...")
+    except Exception as e:
+        logger.error(f"Erreur critique : {str(e)}")
+        logger.error("Traceback complet :", exc_info=True)
+    finally:
+        # Nettoyage
+        logger.info("Fermeture propre de l'algorithme...")
+        if 'algo' in locals():
+            try:
+                algo.data_handler.stop_processing()
+                if algo.ibkr_feed.is_connected():
+                    algo.ibkr_feed.disconnect()
+                    logger.info("Déconnexion de TWS effectuée")
+            except Exception as e:
+                logger.error(f"Erreur lors de la fermeture : {str(e)}")
+        logger.info("Algorithme arrêté avec succès")
+
+if __name__ == "__main__":
+    main()
