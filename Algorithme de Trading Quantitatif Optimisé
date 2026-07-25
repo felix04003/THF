@@ -765,7 +765,31 @@ class QuantTradingAlgorithm:
         processed_data['price_impact'] = processed_data['high'] - processed_data['low']
         processed_data['normalized_range'] = processed_data['price_impact'] / processed_data['close']
         processed_data['close_to_open'] = processed_data['close'] / processed_data['open'] - 1
-        
+
+        # RSI(14) — normalisé en [-1, 1]
+        delta = processed_data['close'].diff()
+        gain = delta.clip(lower=0).rolling(window=14, min_periods=1).mean()
+        loss = (-delta.clip(upper=0)).rolling(window=14, min_periods=1).mean()
+        rs = gain / loss.replace(0, 1e-9)
+        processed_data['rsi'] = (100 - (100 / (1 + rs)) - 50) / 50
+
+        # MACD(12, 26, 9) — normalisé par le prix de clôture
+        ema12 = processed_data['close'].ewm(span=12, adjust=False).mean()
+        ema26 = processed_data['close'].ewm(span=26, adjust=False).mean()
+        macd_line = ema12 - ema26
+        macd_sig = macd_line.ewm(span=9, adjust=False).mean()
+        close_ref = processed_data['close'].replace(0, 1e-9)
+        processed_data['macd'] = macd_line / close_ref
+        processed_data['macd_signal_line'] = macd_sig / close_ref
+        processed_data['macd_hist'] = (macd_line - macd_sig) / close_ref
+
+        # Bandes de Bollinger(20) — largeur et position relative
+        bb_mid = processed_data['close'].rolling(window=20, min_periods=1).mean()
+        bb_std = processed_data['close'].rolling(window=20, min_periods=1).std().fillna(0)
+        processed_data['bb_width'] = (2 * bb_std) / bb_mid.replace(0, 1e-9)
+        bb_lower = bb_mid - 2 * bb_std
+        processed_data['bb_position'] = (processed_data['close'] - bb_lower) / (4 * bb_std).replace(0, 1e-9)
+
         # Nettoyage des valeurs NaN
         processed_data = processed_data.dropna()
         
@@ -815,7 +839,9 @@ class QuantTradingAlgorithm:
         # Caractéristiques pour le modèle de signal
         features = [
             'returns', 'volatility', 'ma_ratio', 'volume_ratio',
-            'price_impact', 'normalized_range', 'close_to_open'
+            'price_impact', 'normalized_range', 'close_to_open',
+            'rsi', 'macd', 'macd_signal_line', 'macd_hist',
+            'bb_width', 'bb_position'
         ]
         
         # Préparation des données
@@ -879,7 +905,9 @@ class QuantTradingAlgorithm:
         # Construire le vecteur de caractéristiques dans le bon ordre
         required_features = [
             'returns', 'volatility', 'ma_ratio', 'volume_ratio',
-            'price_impact', 'normalized_range', 'close_to_open'
+            'price_impact', 'normalized_range', 'close_to_open',
+            'rsi', 'macd', 'macd_signal_line', 'macd_hist',
+            'bb_width', 'bb_position'
         ]
         
         # Vérifier si toutes les caractéristiques sont disponibles

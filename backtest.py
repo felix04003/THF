@@ -51,6 +51,7 @@ IBKR_PORT = 4002                # IB Gateway Paper
 HISTORY_DURATION = '2 Y'
 BAR_SIZE = '1 day'
 SIGNAL_THRESHOLD = 0.52
+STOP_LOSS_PCT = 0.02      # Stop-loss à 2% par trade
 
 logging.basicConfig(
     level=logging.INFO,
@@ -116,7 +117,9 @@ def simulate(symbol: str, test_data: pd.DataFrame, algo: QuantTradingAlgorithm) 
     Retourne (trades, portfolio_values).
     """
     FEATURES = ['returns', 'volatility', 'ma_ratio', 'volume_ratio',
-                'price_impact', 'normalized_range', 'close_to_open']
+                'price_impact', 'normalized_range', 'close_to_open',
+                'rsi', 'macd', 'macd_signal_line', 'macd_hist',
+                'bb_width', 'bb_position']
 
     position_sizer = _mod.AdaptivePositionSizer()
     signal_gen = algo.signal_generator
@@ -140,6 +143,28 @@ def simulate(symbol: str, test_data: pd.DataFrame, algo: QuantTradingAlgorithm) 
         )
         delta = round(target_units)
 
+        # Stop-loss : clôture si la perte dépasse STOP_LOSS_PCT
+        if position != 0 and entry_price is not None:
+            price_change = (price - entry_price) / entry_price
+            stop_triggered = (position > 0 and price_change < -STOP_LOSS_PCT) or \
+                             (position < 0 and price_change > STOP_LOSS_PCT)
+            if stop_triggered:
+                pnl = position * (price - entry_price)
+                trades.append({
+                    'symbol': symbol,
+                    'entry_price': entry_price,
+                    'exit_price': price,
+                    'units': position,
+                    'pnl': pnl,
+                    'duration_bars': i - entry_idx,
+                    'confidence': confidence,
+                    'exit_reason': 'stop_loss',
+                })
+                capital += pnl
+                position = 0.0
+                entry_price = None
+                entry_idx = None
+
         if delta != 0:
             # Fermeture si changement de sens
             if position != 0 and entry_price is not None:
@@ -153,6 +178,7 @@ def simulate(symbol: str, test_data: pd.DataFrame, algo: QuantTradingAlgorithm) 
                         'pnl': pnl,
                         'duration_bars': i - entry_idx,
                         'confidence': confidence,
+                        'exit_reason': 'signal_reversal',
                     })
                     capital += pnl
                     position = 0.0
