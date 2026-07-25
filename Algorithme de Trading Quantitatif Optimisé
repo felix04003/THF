@@ -64,6 +64,8 @@ def setup_logging():
     )
     return logging.getLogger(__name__)
 
+logger = setup_logging()
+
 class MarketImpactModel:
     """
     Modèle d'impact de marché optimisé basé sur les travaux de Bouchaud
@@ -1181,7 +1183,7 @@ def main_verification():
     
     try:
         # 3. Tenter la connexion
-        if not ibkr.connectIBKR():
+        if not ibkr.connectIBKR(port=4002):
             logger.error("Échec de la connexion à TWS")
             return False
             
