@@ -51,7 +51,7 @@ IBKR_PORT = 4002                # IB Gateway Paper
 HISTORY_DURATION = '2 Y'
 BAR_SIZE = '1 day'
 SIGNAL_THRESHOLD = 0.52
-STOP_LOSS_PCT = 0.02      # Stop-loss à 2% par trade
+ATR_STOP_MULTIPLIER = 2.0  # Stop-loss = 2 × ATR (adaptatif à la volatilité)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -119,9 +119,9 @@ def simulate(symbol: str, test_data: pd.DataFrame, algo: QuantTradingAlgorithm) 
     FEATURES = ['returns', 'volatility', 'ma_ratio', 'volume_ratio',
                 'price_impact', 'normalized_range', 'close_to_open',
                 'rsi', 'macd', 'macd_signal_line', 'macd_hist',
-                'bb_width', 'bb_position']
+                'bb_width', 'bb_position', 'atr_ratio']
 
-    position_sizer = _mod.AdaptivePositionSizer()
+    position_sizer = _mod.AdaptivePositionSizer(max_position=0.05)
     signal_gen = algo.signal_generator
 
     capital = INITIAL_CAPITAL
@@ -143,11 +143,13 @@ def simulate(symbol: str, test_data: pd.DataFrame, algo: QuantTradingAlgorithm) 
         )
         delta = round(target_units)
 
-        # Stop-loss : clôture si la perte dépasse STOP_LOSS_PCT
+        # Stop-loss ATR adaptatif : clôture si la perte dépasse ATR_STOP_MULTIPLIER × ATR
+        atr_val = row.get('atr', row['close'] * 0.01) if hasattr(row, 'get') else row['atr'] if 'atr' in row.index else row['close'] * 0.01
+        stop_distance = ATR_STOP_MULTIPLIER * atr_val
         if position != 0 and entry_price is not None:
-            price_change = (price - entry_price) / entry_price
-            stop_triggered = (position > 0 and price_change < -STOP_LOSS_PCT) or \
-                             (position < 0 and price_change > STOP_LOSS_PCT)
+            price_move = price - entry_price
+            stop_triggered = (position > 0 and price_move < -stop_distance) or \
+                             (position < 0 and price_move > stop_distance)
             if stop_triggered:
                 pnl = position * (price - entry_price)
                 trades.append({
