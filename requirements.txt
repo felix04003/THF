@@ -4,5 +4,4 @@ scikit-learn>=0.24.0
 scipy>=1.7.0
 matplotlib>=3.4.0
 joblib>=1.0.0
-ibapi>=9.81.1 
-psutil>=5.9.0 
+ibapi>=9.81.1
