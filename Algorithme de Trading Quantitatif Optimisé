@@ -5,45 +5,52 @@ Améliorations pour performance sur infrastructure économique
 """
 
 # Imports standards
-import logging
-# Suppression de l'import incorrect
-# from termios import IBSHIFT
-logger = logging.getLogger(__name__)
-import matplotlib
-matplotlib.use('Agg')  # Utiliser un backend non interactif
-import numpy as np # type: ignore
-import pandas as pd # type: ignore
+import os
+import sys
+import subprocess
+import warnings
+import numpy as np
+import pandas as pd
 import time
 import logging
 import threading
 import queue
 from datetime import datetime, timedelta
-import subprocess
-import sys
 
 # Imports scientifiques
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingRegressor # type: ignore
-from sklearn.preprocessing import StandardScaler, RobustScaler # type: ignore
-from sklearn.model_selection import TimeSeriesSplit # type: ignore # type: ignore
-from sklearn.pipeline import Pipeline # type: ignore # type: ignore
-from scipy.optimize import minimize # type: ignore
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingRegressor
+from sklearn.preprocessing import StandardScaler, RobustScaler
+from sklearn.model_selection import TimeSeriesSplit
+from sklearn.pipeline import Pipeline
+from scipy.optimize import minimize
 
 # Imports visualisation
-import matplotlib.pyplot as plt # type: ignore # type: ignore
+import matplotlib.pyplot as plt
 
 # Imports utilitaires
-import warnings
-import joblib # type: ignore # type: ignore
+import joblib
 from collections import deque
 
 # Imports IBKR
-from ibapi.client import EClient # type: ignore # type: ignore
-from ibapi.wrapper import EWrapper # type: ignore # type: ignore
-from ibapi.contract import Contract # type: ignore # type: ignore
-from ibapi.order import Order # type: ignore # type: ignore
+try:
+    from ibapi.client import EClient
+    from ibapi.wrapper import EWrapper
+    from ibapi.contract import Contract
+    from ibapi.order import Order
+except ImportError:
+    print("Installation de ibapi...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "ibapi"])
+    from ibapi.client import EClient
+    from ibapi.wrapper import EWrapper
+    from ibapi.contract import Contract
+    from ibapi.order import Order
 
 # Désactiver les avertissements
 warnings.filterwarnings('ignore')
+
+# Ajouter le chemin du projet aux chemins Python
+project_root = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(project_root)
 
 # Configuration du logging
 def setup_logging():
@@ -56,70 +63,6 @@ def setup_logging():
         ]
     )
     return logging.getLogger(__name__)
-
-# Vérifier que IBKR est correctement installé
-try:
-    from ibapi.client import EClient # type: ignore
-except ImportError:
-    print("Installation de ibapi...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "--index-url", "https://pip.pkg.github.com/InteractiveBrokers/ibapi"])
-
-# Ajouter le chemin du projet aux chemins Python
-import os
-import sys
-
-project_root = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(project_root)
-
-def init_config():
-    """Initialise la configuration de base"""
-    # Création du dossier de logs s'il n'existe pas
-    if not os.path.exists('logs'):
-        os.makedirs('logs')
-    
-    # Configuration du logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler("logs/trading_algorithm.log"),
-            logging.StreamHandler()
-        ]
-    )
-    
-    # Vérification des packages
-    verify_packages()
-
-def verify_packages():
-    """Vérifie si les packages requis sont installés"""
-    import sys
-    import subprocess
-    
-    # Liste des packages requis
-    required_packages = [
-        "numpy>=1.21.0",
-        "pandas>=1.3.0",
-        "scikit-learn>=0.24.0",
-        "scipy>=1.7.0",
-        "matplotlib>=3.4.0",
-        "joblib>=1.0.0",
-        "ibapi>=9.81.1"
-    ]
-    
-    # Vérification et installation si nécessaire
-    for package in required_packages:
-        try:
-            package_name = package.split('>=')[0]
-            __import__(package_name)
-            logger.info(f"✓ {package} est installé")
-        except ImportError:
-            logger.warning(f"✗ {package} n'est pas installé")
-            logger.info(f"Installation de {package}...")
-            try:
-                subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-                logger.info(f"✓ {package} a été installé avec succès")
-            except Exception as e:
-                logger.error(f"✗ Erreur lors de l'installation de {package}: {str(e)}")
 
 class MarketImpactModel:
     """
@@ -407,7 +350,7 @@ class MarketDataHandler:
     - Mise en cache des calculs fréquents
     """
     
-    def __init__(self, lookback_periods=100, feature_engineering_interval=60):  # Augmenté à 60 secondes
+    def __init__(self, lookback_periods=100, feature_engineering_interval=5):
         self.lookback_periods = lookback_periods
         self.feature_engineering_interval = feature_engineering_interval
         self.last_feature_calculation = 0
@@ -416,7 +359,6 @@ class MarketDataHandler:
         self.feature_queue = queue.Queue(maxsize=1)
         self.processing_thread = None
         self.running = False
-        self.lock = threading.Lock()  # Ajout d'un verrou pour la synchronisation
         
     def start_processing(self):
         """Démarre le thread de traitement en arrière-plan"""
@@ -437,9 +379,8 @@ class MarketDataHandler:
     
     def add_data_point(self, data_point):
         """Ajoute un point de données au buffer"""
-        with self.lock:
-            self.data_buffer.append(data_point)
-    
+        self.data_buffer.append(data_point)
+        
     def get_current_features(self, data=None, force_calculation=False):
         """
         Obtient les caractéristiques actuelles
@@ -467,11 +408,10 @@ class MarketDataHandler:
         
         # Si nous devons calculer maintenant (fallback)
         if data is None:
-            with self.lock:
-                data = list(self.data_buffer)
-                if not data:
-                    logger.warning("Aucune donnée disponible pour le calcul des caractéristiques")
-                    return {}
+            data = list(self.data_buffer)
+            if not data:
+                logger.warning("Aucune donnée disponible pour le calcul des caractéristiques")
+                return {}
         
         # Création d'un DataFrame à partir des données
         df = pd.DataFrame(data)
@@ -485,37 +425,31 @@ class MarketDataHandler:
     def _background_feature_engineering(self):
         """Processus d'arrière-plan pour le calcul des caractéristiques"""
         while self.running:
-            try:
-                # Vérifier si nous avons besoin de recalculer
-                current_time = time.time()
-                if (current_time - self.last_feature_calculation >= self.feature_engineering_interval 
-                    or not self.feature_cache):
+            # Vérifier si nous avons besoin de recalculer
+            current_time = time.time()
+            if (current_time - self.last_feature_calculation >= self.feature_engineering_interval 
+                or not self.feature_cache):
+                
+                data = list(self.data_buffer)
+                if data:
+                    # Créer un DataFrame et calculer les caractéristiques
+                    df = pd.DataFrame(data)
+                    features = self._calculate_features(df)
                     
-                    with self.lock:
-                        data = list(self.data_buffer)
-                        if data:
-                            # Créer un DataFrame et calculer les caractéristiques
-                            df = pd.DataFrame(data)
-                            features = self._calculate_features(df)
-                            
-                            # Mettre à jour le cache et la file d'attente
-                            try:
-                                # Vider la file d'attente si pleine
-                                while not self.feature_queue.empty():
-                                    self.feature_queue.get_nowait()
-                                # Ajouter les nouvelles caractéristiques
-                                self.feature_queue.put(features, block=False)
-                            except queue.Full:
-                                pass
-                            
-                            self.last_feature_calculation = current_time
-                
-                # Attendre avant la prochaine vérification
-                time.sleep(5)  # Réduit à 5 secondes pour une meilleure réactivité
-                
-            except Exception as e:
-                logger.error(f"Erreur dans le thread de traitement : {str(e)}")
-                time.sleep(1)  # Attendre en cas d'erreur
+                    # Mettre à jour le cache et la file d'attente
+                    try:
+                        # Vider la file d'attente si pleine
+                        while not self.feature_queue.empty():
+                            self.feature_queue.get_nowait()
+                        # Ajouter les nouvelles caractéristiques
+                        self.feature_queue.put(features, block=False)
+                    except queue.Full:
+                        pass
+                    
+                    self.last_feature_calculation = current_time
+            
+            # Attendre avant la prochaine vérification
+            time.sleep(1)
     
     def _calculate_features(self, data):
         """
@@ -531,334 +465,217 @@ class MarketDataHandler:
             logger.error(f"Données manquantes: {missing}")
             return {}
         
-        try:
-            # Caractéristiques techniques de base
-            features = {}
+        # Caractéristiques techniques de base
+        features = {}
+        
+        # Calculs optimisés pour les caractéristiques essentielles
+        close_values = data['close'].values
+        returns = np.diff(close_values) / close_values[:-1]
+        features['returns'] = returns[-1] if len(returns) > 0 else 0
+        
+        # Volatilité (calcul optimisé)
+        vol_window = min(20, len(returns))
+        if vol_window > 1:
+            features['volatility'] = np.std(returns[-vol_window:])
+        else:
+            features['volatility'] = 0.01  # Valeur par défaut
+        
+        # Moyennes mobiles (calcul vectorisé)
+        if len(close_values) >= 5:
+            features['ma_5'] = np.mean(close_values[-5:])
+        else:
+            features['ma_5'] = close_values[-1] if len(close_values) > 0 else 0
             
-            # Utiliser numpy pour les calculs vectorisés
-            close_values = data['close'].values
-            volume_values = data['volume'].values
+        if len(close_values) >= 20:
+            features['ma_20'] = np.mean(close_values[-20:])
+        else:
+            features['ma_20'] = close_values[-1] if len(close_values) > 0 else 0
+        
+        # Ratio des moyennes mobiles
+        if features['ma_20'] != 0:
+            features['ma_ratio'] = features['ma_5'] / features['ma_20']
+        else:
+            features['ma_ratio'] = 1.0
+        
+        # Volume
+        volume_values = data['volume'].values
+        if len(volume_values) >= 5:
+            features['volume_ma_5'] = np.mean(volume_values[-5:])
+        else:
+            features['volume_ma_5'] = volume_values[-1] if len(volume_values) > 0 else 1
             
-            # Calculs optimisés pour les caractéristiques essentielles
-            if len(close_values) > 1:
-                returns = np.diff(close_values) / close_values[:-1]
-                features['returns'] = returns[-1]
-                
-                # Volatilité (calcul optimisé)
-                vol_window = min(20, len(returns))
-                if vol_window > 1:
-                    features['volatility'] = np.std(returns[-vol_window:])
+        if features['volume_ma_5'] > 0 and len(volume_values) > 0:
+            features['volume_ratio'] = volume_values[-1] / features['volume_ma_5']
+        else:
+            features['volume_ratio'] = 1.0
+        
+        # Caractéristiques de microstructure simplifiées
+        if len(data) > 0:
+            last_row = data.iloc[-1]
+            if all(x in last_row for x in ['high', 'low', 'close']):
+                features['price_impact'] = last_row['high'] - last_row['low']
+                if last_row['close'] != 0:
+                    features['normalized_range'] = features['price_impact'] / last_row['close']
                 else:
-                    features['volatility'] = 0.01
-            else:
-                features['returns'] = 0
-                features['volatility'] = 0.01
+                    features['normalized_range'] = 0
             
-            # Moyennes mobiles (calcul vectorisé)
-            if len(close_values) >= 5:
-                features['ma_5'] = np.mean(close_values[-5:])
-            else:
-                features['ma_5'] = close_values[-1] if len(close_values) > 0 else 0
-                
-            if len(close_values) >= 20:
-                features['ma_20'] = np.mean(close_values[-20:])
-            else:
-                features['ma_20'] = close_values[-1] if len(close_values) > 0 else 0
-            
-            # Ratio des moyennes mobiles
-            if features['ma_20'] != 0:
-                features['ma_ratio'] = features['ma_5'] / features['ma_20']
-            else:
-                features['ma_ratio'] = 1.0
-            
-            # Volume
-            if len(volume_values) >= 5:
-                features['volume_ma_5'] = np.mean(volume_values[-5:])
-            else:
-                features['volume_ma_5'] = volume_values[-1] if len(volume_values) > 0 else 1
-                
-            if features['volume_ma_5'] > 0 and len(volume_values) > 0:
-                features['volume_ratio'] = volume_values[-1] / features['volume_ma_5']
-            else:
-                features['volume_ratio'] = 1.0
-            
-            # Caractéristiques de microstructure simplifiées
-            if len(data) > 0:
-                last_row = data.iloc[-1]
-                if all(x in last_row for x in ['high', 'low', 'close']):
-                    features['price_impact'] = last_row['high'] - last_row['low']
-                    if last_row['close'] != 0:
-                        features['normalized_range'] = features['price_impact'] / last_row['close']
-                    else:
-                        features['normalized_range'] = 0
-                
-                if all(x in last_row for x in ['open', 'close']):
-                    if last_row['open'] != 0:
-                        features['close_to_open'] = last_row['close'] / last_row['open'] - 1
-                    else:
-                        features['close_to_open'] = 0
-            
-            logger.debug(f"Caractéristiques calculées en {time.time() - start_time:.4f} secondes")
-            return features
-            
-        except Exception as e:
-            logger.error(f"Erreur lors du calcul des caractéristiques : {str(e)}")
-            return {}
+            if all(x in last_row for x in ['open', 'close']):
+                if last_row['open'] != 0:
+                    features['close_to_open'] = last_row['close'] / last_row['open'] - 1
+                else:
+                    features['close_to_open'] = 0
+        
+        logger.debug(f"Caractéristiques calculées en {time.time() - start_time:.4f} secondes")
+        return features
 
 class IBKRConnection(EWrapper, EClient):
     """
-    Gestionnaire de connexion IBKR optimisé
-    - Reconnexion automatique
-    - Traitement asynchrone des requêtes
-    - Meilleures performances pour les données en temps réel
+    Classe de connexion à Interactive Brokers
     """
-    
-    def __init__(self, port=7496, clientId=1):
+    def __init__(self):
         EClient.__init__(self, self)
-        self.port = port
-        self.clientId = clientId
-        self.connected = False
-        self.next_order_id = None
+        self.data = {}
         self.contract_details = {}
         self.account_summary = {}
-        self.data = {}
-        self.logger = logging.getLogger('IBKRConnection')
-        self.connection_attempts = 0
-        self.max_attempts = 3
-        self.retry_delay = 5  # secondes
-        self.logger.info(f"Configuration de la connexion IBKR sur le port {port} (Paper Trading)")
-        
-    def connect(self):
-        """Établit la connexion à TWS avec mécanisme de retry"""
-        while self.connection_attempts < self.max_attempts:
-            try:
-                self.connection_attempts += 1
-                self.logger.info(f"Tentative de connexion {self.connection_attempts}/{self.max_attempts} à TWS...")
-                
-                # Connexion à TWS
-                super().connect('127.0.0.1', self.port, clientId=self.clientId)
-                
-                # Démarrer le thread de messages
-                thread = threading.Thread(target=self.run, daemon=True)
-                thread.start()
-                
-                # Attendre la connexion avec timeout
-                timeout = 30  # Augmenté à 30 secondes
-                start_time = time.time()
-                while self.next_order_id is None and time.time() - start_time < timeout:
-                    time.sleep(0.1)
-                
-                if self.next_order_id is not None:
-                    self.connected = True
-                    self.logger.info("✓ Connexion à TWS établie avec succès")
-                    return True
-                else:
-                    self.logger.error("✗ Échec de la connexion à TWS (timeout)")
-                    if self.connection_attempts < self.max_attempts:
-                        self.logger.info(f"Attente de {self.retry_delay} secondes avant la prochaine tentative...")
-                        time.sleep(self.retry_delay)
-                    continue
-                    
-            except Exception as e:
-                self.logger.error(f"Erreur lors de la connexion à TWS: {str(e)}")
-                if "Couldn't connect to TWS" in str(e):
-                    self.logger.error(f"""
-                    Vérifiez que :
-                    1. TWS est en cours d'exécution
-                    2. Le port {self.port} est correctement configuré dans TWS
-                    3. 'Enable ActiveX and Socket Clients' est coché
-                    4. 'Allow connections from localhost only' est coché
-                    5. '127.0.0.1' est dans la liste des IPs de confiance
-                    """)
-                if self.connection_attempts < self.max_attempts:
-                    self.logger.info(f"Attente de {self.retry_delay} secondes avant la prochaine tentative...")
-                    time.sleep(self.retry_delay)
-                continue
-        
-        self.logger.error("✗ Échec de la connexion après toutes les tentatives")
-        return False
-        
-    def nextValidId(self, orderId):
-        """Callback quand la connexion est établie"""
-        self.next_order_id = orderId
-        self.logger.info(f"Connexion établie, prochain ID d'ordre: {orderId}")
+        self.connection_status = False
+        self.next_order_id = None
+        self.lock = threading.Lock()
+        self.historical_data = {}
+        self.historical_data_events = {}
         
     def error(self, reqId, errorCode, errorString):
-        """Gestion des erreurs de l'API"""
-        self.logger.error(f"Erreur TWS: {reqId} / {errorCode} / {errorString}")
+        logger.error(f"Erreur {errorCode} : {errorString}")
         
-        # Messages d'erreur spécifiques
-        if errorCode == 502:
-            self.logger.error("✗ Port TWS incorrect")
-        elif errorCode == 501:
-            self.logger.error("✗ API non activée")
-        elif errorCode == 1100:
-            self.logger.error("✗ Connexion perdue")
+    def nextValidId(self, orderId):
+        self.next_order_id = orderId
+        self.connection_status = True
+        logger.info(f"Connexion établie. Prochain ID d'ordre : {orderId}")
         
-    def connectionClosed(self):
-        """Callback quand la connexion est fermée"""
-        self.connected = False
-        self.logger.error("Connexion à TWS fermée")
-        
-    def is_connected(self):
-        """Vérifie si la connexion est active"""
-        return self.connected and super().isConnected()
-        
-    def disconnect(self):
-        """Déconnexion de TWS"""
-        if self.is_connected():
-            try:
-                super().disconnect()
-                self.connected = False
-                self.logger.info("Déconnexion de TWS effectuée")
-            except Exception as e:
-                self.logger.error(f"Erreur lors de la déconnexion: {str(e)}")
-                
     def contractDetails(self, reqId, contractDetails):
-        """Callback pour les détails de contrat"""
-        super().contractDetails(reqId, contractDetails)
-        if reqId not in self.contract_details:
-            self.contract_details[reqId] = []
-        self.contract_details[reqId].append(contractDetails)
-        
-    def contractDetailsEnd(self, reqId):
-        """Callback fin des détails de contrat"""
-        super().contractDetailsEnd(reqId)
-        self.logger.info(f"Détails de contrat reçus pour reqId {reqId}")
-        
+        with self.lock:
+            symbol = contractDetails.contract.symbol
+            self.contract_details[symbol] = contractDetails
+            logger.info(f"Détails reçus pour {symbol}")
+            
     def accountSummary(self, reqId, account, tag, value, currency):
-        """Callback pour le résumé de compte"""
-        super().accountSummary(reqId, account, tag, value, currency)
-        if tag not in self.account_summary:
-            self.account_summary[tag] = {}
-        self.account_summary[tag]['value'] = value
-        self.account_summary[tag]['currency'] = currency
-        
-    def accountSummaryEnd(self, reqId):
-        """Callback fin du résumé de compte"""
-        super().accountSummaryEnd(reqId)
-        self.logger.info("Résumé du compte reçu")
-        
+        with self.lock:
+            self.account_summary[tag] = {
+                'value': value,
+                'currency': currency
+            }
+
     def historicalData(self, reqId, bar):
-        """Callback pour les données historiques"""
-        if reqId not in self.data:
-            self.data[reqId] = []
-        self.data[reqId].append({
-            'date': bar.date,
-            'open': bar.open,
-            'high': bar.high,
-            'low': bar.low,
-            'close': bar.close,
-            'volume': bar.volume
-        })
-        
+        """Callback IBKR : reçoit les barres de données historiques"""
+        with self.lock:
+            if reqId not in self.historical_data:
+                self.historical_data[reqId] = []
+            self.historical_data[reqId].append({
+                'date': bar.date,
+                'open': bar.open,
+                'high': bar.high,
+                'low': bar.low,
+                'close': bar.close,
+                'volume': bar.volume,
+            })
+
     def historicalDataEnd(self, reqId, start, end):
-        """Callback fin des données historiques"""
-        self.logger.info(f"Données historiques reçues pour reqId {reqId}: {len(self.data[reqId])} barres")
-        
-    def get_contract(self, symbol, secType="STK", exchange="SMART", currency="USD"):
-        """Crée un contrat pour un symbole donné"""
+        """Callback IBKR : signale la fin de la réception des données historiques"""
+        logger.info(f"Données historiques reçues pour reqId={reqId} ({start} → {end})")
+        if reqId in self.historical_data_events:
+            self.historical_data_events[reqId].set()
+
+    def get_contract(self, symbol, sec_type='STK', exchange='SMART', currency='USD'):
+        """Crée et retourne un contrat IBKR standard"""
         contract = Contract()
         contract.symbol = symbol
-        contract.secType = secType
+        contract.secType = sec_type
         contract.exchange = exchange
         contract.currency = currency
         return contract
 
+    def place_order(self, contract, action, quantity, order_type='MKT'):
+        """Place un ordre via IBKR et retourne l'order_id utilisé"""
+        if self.next_order_id is None:
+            raise RuntimeError("Aucun order ID disponible — connexion non établie")
+        order = Order()
+        order.action = action
+        order.totalQuantity = quantity
+        order.orderType = order_type
+        order_id = self.next_order_id
+        self.placeOrder(order_id, contract, order)
+        self.next_order_id += 1
+        logger.info(f"Ordre placé : {action} {quantity} {contract.symbol} (id={order_id})")
+        return order_id
+
+    def connectIBKR(self, host='127.0.0.1', port=7497, client_id=1, max_retries=3):
+        """Établit la connexion avec IBKR avec retry et backoff exponentiel"""
+        for attempt in range(1, max_retries + 1):
+            try:
+                self.connect(host, port, clientId=client_id)
+
+                api_thread = threading.Thread(target=self.run, daemon=True)
+                api_thread.start()
+
+                # Attendre la confirmation de connexion (nextValidId)
+                timeout = 10
+                start_time = time.time()
+                while not self.connection_status and time.time() - start_time < timeout:
+                    time.sleep(0.1)
+
+                if self.connection_status:
+                    logger.info(f"Connexion IBKR établie (host={host}, port={port}, clientId={client_id})")
+                    return True
+
+                raise ConnectionError("nextValidId non reçu dans le délai imparti")
+
+            except Exception as e:
+                logger.error(f"Tentative {attempt}/{max_retries} échouée : {e}")
+                if attempt < max_retries:
+                    wait = 2 ** attempt
+                    logger.info(f"Nouvelle tentative dans {wait}s...")
+                    time.sleep(wait)
+
+        logger.error("Impossible de se connecter à TWS après toutes les tentatives")
+        return False
+
 class IBKRDataFeed:
     """
     Gestionnaire de flux de données IBKR
-    Utilise la classe IBKRConnection pour récupérer les données
     """
     def __init__(self):
-        logger.info("Initialisation du flux de données IBKR...")
-        self.ibkr = IBKRConnection(port=7497, clientId=1)  # Utiliser le port 7497 pour Paper Trading
-        logger.info(f"Tentative de connexion au port {self.ibkr.port} (Paper Trading)...")
+        self.ibkr = IBKRConnection()
+        self.ibkr.connectIBKR()
         
-        # Tentative de connexion avec retry
-        max_retries = 3
-        retry_delay = 2
-        for attempt in range(max_retries):
-            try:
-                if self.ibkr.connect():
-                    logger.info("Connexion IBKR établie avec succès")
-                    break
-                else:
-                    logger.warning(f"Tentative de connexion {attempt + 1}/{max_retries} échouée")
-                    if attempt < max_retries - 1:
-                        logger.info(f"Attente de {retry_delay} secondes avant la prochaine tentative...")
-                        time.sleep(retry_delay)
-            except Exception as e:
-                logger.error(f"Erreur lors de la tentative de connexion {attempt + 1}: {str(e)}")
-                if attempt < max_retries - 1:
-                    time.sleep(retry_delay)
-        
-        if not self.ibkr.is_connected():
-            logger.error("Échec de la connexion après toutes les tentatives")
-            logger.error("""
-            Vérifiez que :
-            1. TWS est en cours d'exécution
-            2. Le port 7497 est correctement configuré dans TWS
-            3. 'Enable ActiveX and Socket Clients' est coché
-            4. 'Allow connections from localhost only' est coché
-            5. '127.0.0.1' est dans la liste des IPs de confiance
-            6. Redémarrez TWS après avoir modifié ces paramètres
-            """)
-            raise ConnectionError("Impossible de se connecter à TWS. Veuillez vérifier que TWS est en cours d'exécution et que l'API est correctement configurée.")
-    
-    def is_connected(self):
-        """Vérifie si la connexion à TWS est active"""
-        return self.ibkr.is_connected()
-        
-    def disconnect(self):
-        """Déconnexion de TWS"""
-        self.ibkr.disconnect()
-        
-    def get_historical_data(self, symbol, duration='1 D', bar_size='1 min'):
-        """Récupère les données historiques"""
-        logger.info(f"Récupération des données historiques pour {symbol}...")
-        try:
-            contract = self.ibkr.get_contract(symbol)
-            logger.info(f"Contrat créé pour {symbol}")
-            
-            # Nettoyer les données précédentes
-            if 1 in self.ibkr.data:
-                del self.ibkr.data[1]
-            logger.info("Données précédentes nettoyées")
-            
-            # Requête des données historiques
-            logger.info(f"Envoi de la requête pour {symbol} (durée: {duration}, taille: {bar_size})")
-            self.ibkr.reqHistoricalData(
-                reqId=1,
-                contract=contract,
-                endDateTime='',
-                durationStr=duration,
-                barSizeSetting=bar_size,
-                whatToShow='TRADES',
-                useRTH=1,
-                formatDate=1,
-                keepUpToDate=False,
-                chartOptions=[]
-            )
-            
-            # Attendre les données avec timeout
-            timeout = 5
-            start_time = time.time()
-            logger.info("Attente des données...")
-            while 1 not in self.ibkr.data and time.time() - start_time < timeout:
-                time.sleep(0.1)
-            
-            if 1 not in self.ibkr.data or not self.ibkr.data[1]:
-                logger.error(f"Aucune donnée reçue pour {symbol} après {timeout} secondes")
-                return pd.DataFrame()
-            
-            logger.info(f"Données reçues pour {symbol}: {len(self.ibkr.data[1])} points")
-            return pd.DataFrame(self.ibkr.data[1])
-            
-        except Exception as e:
-            logger.error(f"Erreur lors de la récupération des données pour {symbol}: {str(e)}")
-            logger.error("Traceback complet :", exc_info=True)
+    def get_historical_data(self, symbol, duration='1 D', bar_size='1 min', timeout=15):
+        """Récupère les données historiques via un threading.Event (non bloquant fixe)"""
+        req_id = 1
+        event = threading.Event()
+        with self.ibkr.lock:
+            self.ibkr.historical_data[req_id] = []
+            self.ibkr.historical_data_events[req_id] = event
+
+        contract = self.ibkr.get_contract(symbol)
+        self.ibkr.reqHistoricalData(
+            reqId=req_id,
+            contract=contract,
+            endDateTime='',
+            durationStr=duration,
+            barSizeSetting=bar_size,
+            whatToShow='TRADES',
+            useRTH=1,
+            formatDate=1,
+            keepUpToDate=False,
+            chartOptions=[]
+        )
+
+        received = event.wait(timeout=timeout)
+        if not received:
+            logger.error(f"Timeout ({timeout}s) : données historiques non reçues pour {symbol}")
             return pd.DataFrame()
+
+        with self.ibkr.lock:
+            data = list(self.ibkr.historical_data.get(req_id, []))
+        return pd.DataFrame(data)
 
 class QuantTradingAlgorithm:
     """
@@ -882,6 +699,7 @@ class QuantTradingAlgorithm:
         self.performance_metrics = {}
         self.last_signal_time = None
         self.signal_cooldown = 60  # Temps en secondes entre les générations de signaux
+        self._stop_event = threading.Event()
         
         # Composants principaux
         self.data_handler = MarketDataHandler()
@@ -923,7 +741,12 @@ class QuantTradingAlgorithm:
         # Utilisation de numpy pour accélérer le calcul de la volatilité
         close_values = processed_data['close'].values
         returns = np.diff(close_values) / close_values[:-1]
-        volatility = pd.Series(returns).rolling(window=20).std()
+        volatility = np.zeros(len(close_values))
+        
+        # Calcul optimisé de la volatilité par fenêtre glissante
+        window = 20
+        for i in range(window, len(returns)+1):
+            volatility[i] = np.std(returns[i-window:i])
         
         processed_data['volatility'] = volatility
         
@@ -1072,122 +895,59 @@ class QuantTradingAlgorithm:
         self.last_signal_time = current_time
         
         logger.info(f"Signal généré: {signal}, confiance: {confidence:.4f}")
+        return signal, confidence
 
     def execute_trade(self, symbol, quantity, action):
         """Exécute un trade via IBKR"""
         try:
-            logger.info(f"Préparation de l'ordre {action} pour {symbol}...")
-            contract = self.ibkr_feed.get_contract(symbol)
-            
-            # Création de l'ordre
-            order = Order()
-            order.action = action
-            order.totalQuantity = abs(quantity)
-            order.orderType = "MKT"  # Ordre au marché
-            order.tif = "DAY"  # Valable pour la journée
-            
-            logger.info(f"Envoi de l'ordre: {action} {abs(quantity)} {symbol}")
-            self.ibkr_feed.client.placeOrder(
-                self.ibkr_feed.client.next_order_id,
-                contract,
-                order
-            )
-            logger.info("Ordre envoyé avec succès")
-            
+            contract = self.ibkr_feed.ibkr.get_contract(symbol)
+            self.ibkr_feed.ibkr.place_order(contract, action, abs(quantity))
+            logger.info(f"Ordre envoyé : {action} {abs(quantity)} {symbol}")
         except Exception as e:
-            logger.error(f"Erreur lors de l'exécution du trade : {str(e)}")
-            logger.error("Traceback complet :", exc_info=True)
+            logger.error(f"Erreur lors de l'exécution du trade : {e}")
             
+    def stop(self):
+        """Arrête proprement la boucle de trading live"""
+        logger.info("Arrêt du trading live demandé...")
+        self._stop_event.set()
+
     def run_live_trading(self, symbols, interval='1 min'):
         """
-        Exécute l'algorithme en trading live avec IBKR
+        Exécute l'algorithme en trading live avec IBKR.
+        Appeler stop() depuis un autre thread pour arrêter proprement.
         """
         logger.info("Démarrage du trading live avec IBKR...")
-        
-        # Vérification initiale de la connexion
-        if not self.ibkr_feed.is_connected():
-            logger.error("Pas de connexion à TWS. Tentative de reconnexion...")
-            if not self.ibkr_feed.connect():
-                logger.error("Échec de la connexion à TWS. Veuillez vérifier que TWS est en cours d'exécution.")
-                return
-            
-        logger.info("Connexion TWS établie")
-        
-        # Vérification des permissions de trading
-        logger.info("Vérification des permissions de trading...")
-        permissions = verify_trading_permissions(self.ibkr_feed.client)
-        if not any(permissions.values()):
-            logger.error("Permissions de trading insuffisantes")
-            return
-            
-        logger.info("Permissions de trading vérifiées")
-        
-        # Vérification du compte
-        logger.info("Vérification du statut du compte...")
-        if not verify_account_status(self.ibkr_feed.client):
-            logger.error("Impossible de vérifier le statut du compte")
-            return
-        
-        logger.info("Compte vérifié avec succès")
-        
-        # Initialisation des positions
-        self.current_positions = {symbol: 0 for symbol in symbols}
-        logger.info(f"Positions initialisées pour les symboles: {symbols}")
-        
-        iteration_count = 0
-        # Boucle principale de trading
-        while True:
+        self._stop_event.clear()
+
+        while not self._stop_event.is_set():
             try:
-                iteration_count += 1
-                logger.info(f"\n=== Itération {iteration_count} ===")
-                
                 for symbol in symbols:
-                    logger.info(f"\nTraitement du symbole {symbol}...")
-                    
-                    # Vérification de la connexion avant chaque itération
-                    if not self.ibkr_feed.is_connected():
-                        logger.error("Connexion TWS perdue. Tentative de reconnexion...")
-                        if not self.ibkr_feed.connect():
-                            logger.error("Échec de la reconnexion")
-                            time.sleep(60)
-                            continue
-                        
+                    if self._stop_event.is_set():
+                        break
+
                     # Récupération des données récentes
-                    logger.info("Récupération des données historiques...")
                     market_data = self.ibkr_feed.get_historical_data(
                         symbol,
                         duration='1 D',
                         bar_size=interval
                     )
-                    
+
                     if market_data.empty:
-                        logger.warning(f"Aucune donnée reçue pour {symbol}")
+                        logger.warning(f"Aucune donnée reçue pour {symbol}, passage au suivant")
                         continue
-                        
-                    logger.info(f"Données reçues pour {symbol}: {len(market_data)} points")
-                    logger.info(f"Dernière donnée: {market_data.iloc[-1]}")
-                    
-                    # Vérification de la qualité des données
-                    if market_data['close'].isnull().any() or market_data['volume'].isnull().any():
-                        logger.warning("Données incomplètes reçues")
-                        continue
-                    
+
                     # Mise à jour des données
-                    logger.info("Mise à jour du gestionnaire de données...")
                     self.data_handler.add_data_point(market_data.iloc[-1].to_dict())
-                    
+
                     # Génération du signal
-                    logger.info("Génération du signal de trading...")
-                    features = self.data_handler.get_current_features()
-                    if not features:
-                        logger.warning("Aucune caractéristique disponible")
+                    signal, confidence = self.generate_trading_signal(
+                        self.data_handler.get_current_features()
+                    )
+
+                    if signal is None:
                         continue
-                        
-                    signal, confidence = self.generate_trading_signal(features)
-                    logger.info(f"Signal généré: {signal}, confiance: {confidence:.4f}")
-                    
+
                     if abs(signal) > 0 and confidence > 0.6:
-                        logger.info("Signal valide détecté, calcul de la taille de position...")
                         # Calcul de la taille de position
                         current_price = market_data.iloc[-1]['close']
                         position_size = self.position_sizer.calculate_position_size(
@@ -1198,50 +958,35 @@ class QuantTradingAlgorithm:
                             current_price,
                             self.current_positions.get(symbol, 0)
                         )
-                        
+
                         if abs(position_size) > 0:
                             action = 'BUY' if position_size > 0 else 'SELL'
-                            logger.info(f"Exécution de l'ordre: {action} {abs(position_size)} {symbol}")
                             self.execute_trade(symbol, position_size, action)
                             self.current_positions[symbol] = position_size
-                            logger.info(f"Nouvelle position pour {symbol}: {position_size}")
-                        else:
-                            logger.info("Taille de position nulle, pas d'ordre généré")
-                    else:
-                        logger.info("Pas de signal valide ou confiance insuffisante")
-                
-                logger.info(f"Fin de l'itération {iteration_count}")
-                logger.info("Attente avant la prochaine itération...")
-                time.sleep(60)  # Attendre 1 minute
-                
-            except KeyboardInterrupt:
-                logger.info("Arrêt manuel de l'algorithme...")
-                break
+
+                # Attente interruptible de 60s avant la prochaine itération
+                self._stop_event.wait(timeout=60)
+
             except Exception as e:
-                logger.error(f"Erreur dans la boucle de trading : {str(e)}")
-                logger.error("Traceback complet :", exc_info=True)
-                time.sleep(60)  # Attendre avant de réessayer
+                logger.error(f"Erreur dans la boucle de trading : {e}")
+                self._stop_event.wait(timeout=60)
+
+        logger.info("Trading live arrêté proprement")
 
 def verify_trading_permissions(ibkr_connection):
     """Vérifie les autorisations de trading"""
-    logger.info("Vérification détaillée des autorisations de trading...")
+    logger.info("Vérification des autorisations de trading...")
     
     test_symbols = ['AAPL', 'GOOGL', 'MSFT']
     results = {}
-    error_messages = []
     
     for symbol in test_symbols:
         try:
-            logger.info(f"Vérification des permissions pour {symbol}...")
             contract = Contract()
             contract.symbol = symbol
             contract.secType = "STK"
             contract.exchange = "SMART"
             contract.currency = "USD"
-            
-            # Nettoyer les données précédentes
-            if symbol in ibkr_connection.contract_details:
-                del ibkr_connection.contract_details[symbol]
             
             # Requête des détails du contrat
             ibkr_connection.reqContractDetails(
@@ -1249,40 +994,22 @@ def verify_trading_permissions(ibkr_connection):
                 contract=contract
             )
             
-            # Attendre la réponse avec timeout
-            timeout = 5
-            start_time = time.time()
-            while symbol not in ibkr_connection.contract_details and time.time() - start_time < timeout:
-                time.sleep(0.1)
+            # Attendre la réponse
+            time.sleep(1)
             
             # Vérifier si nous avons reçu des données
             if symbol in ibkr_connection.contract_details:
                 logger.info(f"✓ {symbol}: Autorisations OK")
                 results[symbol] = True
             else:
-                logger.warning(f"✗ {symbol}: Pas d'autorisations ou timeout")
+                logger.warning(f"✗ {symbol}: Pas d'autorisations")
                 results[symbol] = False
-                error_messages.append(f"Timeout pour {symbol}")
                 
         except Exception as e:
             logger.error(f"✗ Erreur pour {symbol}: {str(e)}")
             results[symbol] = False
-            error_messages.append(f"Erreur pour {symbol}: {str(e)}")
     
-    # Afficher un résumé des résultats
-    if all(results.values()):
-        logger.info("✓ Toutes les permissions de trading sont validées")
-        return results
-    else:
-        logger.error("✗ Problèmes de permissions détectés:")
-        for symbol, status in results.items():
-            if not status:
-                logger.error(f"- {symbol}: Non autorisé")
-        if error_messages:
-            logger.error("Messages d'erreur détaillés:")
-            for msg in error_messages:
-                logger.error(f"- {msg}")
-        return results
+    return results
 
 def verify_account_status(ibkr_connection):
     """Vérifie le statut du compte"""
@@ -1322,164 +1049,92 @@ def verify_account_status(ibkr_connection):
 
 def verify_tws_running():
     """Vérifie si TWS est en cours d'exécution et accessible"""
-    logger.info("\nVérification de TWS/Gateway :")
-    logger.info("-----------------------------")
-    
-    # Vérifier si TWS est en cours d'exécution
-    tws_process_found = check_tws_process()
-    if tws_process_found:
-        logger.info(f"✓ Processus TWS détecté")
-    else:
-        logger.error(f"✗ Le processus TWS n'est pas en cours d'exécution")
-        return False
-    
-    # Vérifier si les ports sont accessibles
-    tws_ports = {
-        "TWS Live (Port 7496)": 7496,
-        "TWS Paper (Port 7497)": 7497,
-        "Gateway Live (Port 4001)": 4001,
-        "Gateway Paper (Port 4002)": 4002,
-    }
-    
-    any_port_available = False
-    
-    for name, port in tws_ports.items():
-        if check_port_availability(port):
-            logger.info(f"{name}: ✓ En cours d'exécution")
-            any_port_available = True
-        else:
-            logger.info(f"{name}: ✗ Non disponible")
-    
-    if any_port_available:
-        logger.info("✓ Au moins un port TWS est disponible")
-        return True
-    else:
-        logger.error("✗ Aucun port TWS n'est accessible")
-        return False
-
-def check_port_availability(port):
-    """Vérifie si un port est accessible"""
     import socket
-    try:
+    
+    def check_port(port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(1)  # Timeout de 1 seconde
         result = sock.connect_ex(('127.0.0.1', port))
         sock.close()
         return result == 0
-    except Exception as e:
-        logger.error(f"Erreur lors de la vérification du port {port}: {str(e)}")
-        return False
+    
+    tws_ports = {
+        'TWS Live': 7496,
+        'TWS Paper': 7497,
+        'Gateway Live': 4001,
+        'Gateway Paper': 4002
+    }
+    
+    print("\nVérification de TWS/Gateway :")
+    print("-----------------------------")
+    
+    for name, port in tws_ports.items():
+        status = "✓ En cours d'exécution" if check_port(port) else "✗ Non disponible"
+        print(f"{name} (Port {port}): {status}")
 
-def check_tws_process():
-    """Vérifie si le processus TWS est en cours d'exécution"""
-    try:
-        import psutil
-        for proc in psutil.process_iter(['name', 'cmdline']):
-            try:
-                process_name = proc.info['name'].lower()
-                cmdline = proc.info['cmdline']
-                if cmdline and any('trader workstation' in cmd.lower() for cmd in cmdline if cmd):
-                    logger.info(f"Processus TWS trouvé: PID {proc.pid}")
-                    return True
-                if 'tws' in process_name or 'trader' in process_name:
-                    logger.info(f"Processus TWS trouvé: PID {proc.pid}")
-                    return True
-            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-                continue
-        
-        # Fallback: chercher via ps (pour macOS/Linux)
-        import os
-        for proc in os.popen('ps aux | grep -i "trader workstation"').readlines():
-            if 'trader workstation' in proc.lower() and 'grep' not in proc.lower():
-                logger.info(f"Processus TWS trouvé: {proc.strip()}")
-                return True
-        
-        return False
-    except Exception as e:
-        logger.error(f"Erreur lors de la vérification du processus TWS: {str(e)}")
-        # Fallback basique si psutil n'est pas disponible
-        try:
-            import os
-            for proc in os.popen('ps aux | grep -i "trader workstation"').readlines():
-                if 'trader workstation' in proc.lower() and 'grep' not in proc.lower():
-                    logger.info(f"Processus TWS trouvé: {proc.strip()}")
-                    return True
-            return False
-        except:
-            logger.error("Impossible de vérifier le processus TWS")
-            return False
-
-def verify_tws_api_config():
-    """Vérifie la configuration de l'API TWS"""
-    logger.info("Vérification détaillée de la configuration TWS API...")
+def verify_api_settings():
+    """Teste la connexion API et les paramètres"""
+    from ibapi.client import EClient
+    from ibapi.wrapper import EWrapper
+    import threading
+    import time
     
-    # Vérifier d'abord si TWS est en cours d'exécution
-    if not verify_tws_running():
-        logger.error("TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.")
-        return False
-    
-    # Tentative de connexion à TWS (avec un timeout court)
-    logger.info("Tentative de connexion à TWS...")
-    
-    class QuickConnectionTest(EWrapper, EClient):
+    class APITester(EWrapper, EClient):
         def __init__(self):
             EClient.__init__(self, self)
-            self.connection_successful = False
-            self.error_messages = []
-            
-        def nextValidId(self, orderId):
-            self.connection_successful = True
-            logger.info(f"✓ Connexion établie avec l'ID d'ordre: {orderId}")
+            self.api_status = {
+                'connected': False,
+                'socket_port': False,
+                'api_enabled': False,
+                'permissions': False
+            }
             
         def error(self, reqId, errorCode, errorString):
-            self.error_messages.append((errorCode, errorString))
-            if errorCode == 502:
-                logger.error("✗ Le port TWS n'est pas configuré correctement")
-                logger.error("Veuillez vérifier que le port 7497 est configuré dans TWS > Global Configuration > API")
-            elif errorCode == 501:
-                logger.error("✗ L'API TWS n'est pas activée")
-                logger.error("Veuillez activer 'Enable ActiveX and Socket Clients' dans TWS > Global Configuration > API")
-            elif errorCode == 507:
-                logger.error("✗ TWS API bloquée par le pare-feu")
-                logger.error("Veuillez vérifier les paramètres de votre pare-feu")
-            elif errorCode == 1100:
-                logger.error("✗ Connexion perdue")
-                logger.error("Veuillez vérifier que TWS est en cours d'exécution et que le port est correct")
-            logger.info(f"Message d'erreur: {errorString}")
-    
-    # Utiliser le port 7497 pour Paper Trading
-    port = 7497
-    test = QuickConnectionTest()
-    
-    try:
-        logger.info(f"Tentative de connexion sur le port {port}...")
-        test.connect('127.0.0.1', port, clientId=999)
-        test.run()
-        
-        # Attendre 10 secondes maximum pour la connexion
-        timeout = 10
-        start_time = time.time()
-        while not test.connection_successful and time.time() - start_time < timeout:
-            time.sleep(0.1)
-            
-        if test.connection_successful:
-            test.disconnect()
-            logger.info("✓ Connexion réussie à TWS API")
-            return True
-        else:
-            test.disconnect()
-            if test.error_messages:
-                logger.error("✗ Échec de la connexion à TWS avec les erreurs suivantes:")
-                for code, msg in test.error_messages:
-                    logger.error(f"Code {code}: {msg}")
+            if errorCode == 502:  # Port non configuré
+                print("✗ Erreur: Port TWS non configuré")
+            elif errorCode == 501:  # API non activée
+                print("✗ Erreur: API non activée dans TWS")
             else:
-                logger.error("✗ Échec de la connexion à TWS (timeout)")
-            return False
+                print(f"! Message TWS: {errorString}")
+        
+        def nextValidId(self, orderId):
+            self.api_status['connected'] = True
+            self.api_status['api_enabled'] = True
+            print("✓ Connexion API établie avec succès")
+    
+    def run_test():
+        app = APITester()
+        
+        print("\nTest de la configuration API :")
+        print("-----------------------------")
+        
+        try:
+            # Test de connexion
+            app.connect('127.0.0.1', 7497, clientId=1)
             
-    except Exception as e:
-        logger.error(f"✗ Échec de la configuration TWS API")
-        logger.error(f"Erreur détaillée: {str(e)}")
-        return False
+            # Démarrage du thread API
+            api_thread = threading.Thread(target=app.run, daemon=True)
+            api_thread.start()
+            
+            # Attente de la connexion
+            timeout = 5
+            start_time = time.time()
+            while not app.api_status['connected'] and time.time() - start_time < timeout:
+                time.sleep(0.1)
+            
+            # Vérification des résultats
+            if app.api_status['connected']:
+                print("✓ Socket port configuré correctement")
+                print("✓ API activée et accessible")
+            else:
+                print("✗ Impossible d'établir la connexion")
+                
+        except Exception as e:
+            print(f"✗ Erreur de connexion: {e}")
+        finally:
+            if app.isConnected():
+                app.disconnect()
+    
+    run_test()
 
 def show_tws_setup_guide():
     """Affiche le guide de configuration TWS"""
@@ -1497,7 +1152,7 @@ def show_tws_setup_guide():
     - Allez dans File > Global Configuration (Alt+G)
     - Sélectionnez 'API' dans le menu de gauche
     - Cochez 'Enable ActiveX and Socket Clients'
-    - Définissez 'Socket port' sur 7497 (Paper Trading)
+    - Définissez 'Socket port' sur 7497 (Paper Trading) ou 7496 (Live)
     - Cochez 'Read-Only API' pour les tests initiaux
     
     3. Configurer les Permissions
@@ -1514,101 +1169,118 @@ def show_tws_setup_guide():
     """
     print(guide)
 
-def main():
+def main_verification():
+    """Vérification complète de la configuration"""
+    logger.info("Démarrage de la vérification complète...")
+    
+    # 1. Vérifier si TWS est en cours d'exécution
+    verify_tws_running()
+    
+    # 2. Créer la connexion IBKR
+    ibkr = IBKRConnection()
+    
     try:
-        # Configuration du logging
-        logger = setup_logging()
-        logger.info("Démarrage de l'algorithme de trading...")
-        logger.info("Version Python : " + sys.version)
-        logger.info("Répertoire de travail : " + os.getcwd())
-
-        # Vérification des packages
-        logger.info("Vérification des packages...")
-        verify_packages()
-
-        # Vérification de TWS avec plus de détails
-        logger.info("Vérification détaillée de la configuration TWS...")
-        tws_status = verify_tws_running()
-        if not tws_status:
-            logger.error("TWS n'est pas en cours d'exécution. Veuillez démarrer TWS d'abord.")
-            show_tws_setup_guide()
-            sys.exit(1)
-        else:
-            logger.info("TWS est en cours d'exécution et accessible")
-
-        # Vérification de la configuration API avec plus de détails
-        logger.info("Vérification détaillée de la configuration API...")
-        api_status = verify_tws_api_config()
-        if not api_status:
-            logger.error("Configuration API incorrecte. Veuillez vérifier les paramètres dans TWS.")
-            show_tws_setup_guide()
-            sys.exit(1)
-        else:
-            logger.info("Configuration API validée")
-
-        # Initialisation de l'algorithme avec plus de détails
-        logger.info("Initialisation détaillée de l'algorithme de trading...")
-        try:
-            algo = QuantTradingAlgorithm(
-                risk_aversion=1.0,  # Paramètre de risque conservateur
-                initial_capital=100000,  # Capital initial
-                model_path=None  # Pas de modèle pré-entraîné pour commencer
-            )
-            logger.info("Algorithme initialisé avec succès")
-        except Exception as e:
-            logger.error(f"Erreur lors de l'initialisation de l'algorithme : {str(e)}")
-            logger.error("Traceback complet :", exc_info=True)
-            sys.exit(1)
-
-        # Vérification détaillée de la connexion IBKR
-        logger.info("Vérification détaillée de la connexion IBKR...")
-        if not algo.ibkr_feed.is_connected():
-            logger.error("Échec de la connexion à IBKR - Tentative de reconnexion...")
-            time.sleep(2)  # Attendre un peu avant de réessayer
-            if not algo.ibkr_feed.connect():
-                logger.error("La reconnexion a échoué. Veuillez vérifier TWS et réessayer.")
-                sys.exit(1)
-        else:
-            logger.info("Connexion IBKR établie avec succès")
-
-        # Liste des symboles à trader (commencez avec un seul pour tester)
-        symbols = ['AAPL']  # Apple pour le test
-        logger.info(f"Symboles à trader : {symbols}")
-
-        # Vérification du compte
-        logger.info("Vérification du statut du compte...")
-        if not verify_account_status(algo.ibkr_feed.client):
+        # 3. Tenter la connexion
+        if not ibkr.connectIBKR():
+            logger.error("Échec de la connexion à TWS")
+            return False
+            
+        # 4. Vérifier les permissions de trading
+        trading_permissions = verify_trading_permissions(ibkr)
+        if not any(trading_permissions.values()):
+            logger.error("Aucune permission de trading valide")
+            return False
+            
+        # 5. Vérifier le statut du compte
+        if not verify_account_status(ibkr):
             logger.error("Impossible de vérifier le statut du compte")
-            sys.exit(1)
-
-        # Démarrage du trading en mode paper trading
-        logger.info("Démarrage du trading en mode simulation...")
-        try:
-            algo.run_live_trading(symbols, interval='1 min')
-        except KeyboardInterrupt:
-            logger.info("Arrêt manuel de l'algorithme...")
-        except Exception as e:
-            logger.error(f"Erreur lors de l'exécution du trading : {str(e)}")
-            logger.error("Traceback complet :", exc_info=True)
-            raise
-
-    except KeyboardInterrupt:
-        logger.info("Arrêt manuel de l'algorithme...")
+            return False
+            
+        logger.info("✓ Vérification complète réussie")
+        return True
+        
     except Exception as e:
-        logger.error(f"Erreur critique : {str(e)}")
-        logger.error("Traceback complet :", exc_info=True)
+        logger.error(f"Erreur lors de la vérification : {str(e)}")
+        return False
+        
     finally:
-        # Nettoyage
-        logger.info("Fermeture propre de l'algorithme...")
-        if 'algo' in locals():
-            try:
-                algo.data_handler.stop_processing()
-                if algo.ibkr_feed.is_connected():
-                    algo.ibkr_feed.disconnect()
-                    logger.info("Déconnexion de TWS effectuée")
-            except Exception as e:
-                logger.error(f"Erreur lors de la fermeture : {str(e)}")
-        logger.info("Algorithme arrêté avec succès")
+        if ibkr and ibkr.isConnected():
+            ibkr.disconnect()
+            logger.info("Déconnexion de TWS")
 
+# Programme principal de vérification
+def main_setup_check():
+    print("Vérification de la configuration TWS")
+    print("===================================")
+    
+    # 1. Vérifier si TWS est en cours d'exécution
+    verify_tws_api_config()
+    
+    # 2. Vérifier les autorisations de trading
+    verify_trading_permissions()
+    
+    # 3. Afficher les résultats
+    print("\nRésumé de la configuration :")
+    print("---------------------------")
+    print("Pour finaliser la configuration :")
+    print("1. Vérifiez que tous les tests sont passés (✓)")
+    print("2. Si des erreurs sont présentes (✗), corrigez-les dans TWS")
+    print("3. Redémarrez TWS si nécessaire")
+    print("4. Relancez ce test de vérification")
+
+# Lancer la vérification
 if __name__ == "__main__":
-    main()
+    # Configuration du logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler("trading_verification.log"),
+            logging.StreamHandler()
+        ]
+    )
+    
+    # Lancer la vérification
+    if main_verification():
+        logger.info("Configuration prête pour le trading")
+    else:
+        logger.error("Des corrections sont nécessaires avant de commencer le trading")
+
+# Vérifier l'installation des packages
+import sys
+import subprocess
+
+def verify_packages():
+    required_packages = [
+        'numpy>=1.21.0',
+        'pandas>=1.3.0',
+        'scikit-learn>=0.24.0',
+        'scipy>=1.7.0',
+        'matplotlib>=3.4.0',
+        'joblib>=1.0.0',
+        'ibapi>=9.81.1'
+    ]
+    
+    for package in required_packages:
+        try:
+            __import__(package)
+            print(f"✓ {package} est installé")
+        except ImportError:
+            print(f"✗ {package} n'est pas installé")
+            print(f"Installation de {package}...")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+def setup_environment():
+    """Configure l'environnement de développement"""
+    try:
+        # Installation des dépendances
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
+        
+        # Vérification de l'installation
+        verify_packages()
+        
+        print("✓ Configuration terminée avec succès")
+        return True
+    except Exception as e:
+        print(f"✗ Erreur lors de la configuration : {str(e)}")
+        return False
